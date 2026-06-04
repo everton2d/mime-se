@@ -7,8 +7,116 @@ function showDashPage(name) {
   document.querySelectorAll('.dash-nav-item').forEach(item =>
     item.classList.toggle('active', item.dataset.page === name)
   );
-  const loaders = { painel: loadPainel, links: loadPageLinks, grupos: loadPageGrupos, leads: loadPageLeads, config: loadPageConfig };
+  const loaders = { painel: loadPainel, links: loadPageLinks, grupos: loadPageGrupos, leads: loadPageLeads, config: loadPageConfig, lojas: loadPageLojas };
   loaders[name]?.();
+}
+
+// ══════════════════════════════════════
+// HELPERS — TOGGLES E OLHO
+// ══════════════════════════════════════
+function toggleFormToggle(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.dataset.on = el.dataset.on === 'true' ? 'false' : 'true';
+}
+
+function toggleEye(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  input.type = input.type === 'password' ? 'text' : 'password';
+  btn.style.opacity = input.type === 'text' ? '1' : '.5';
+}
+
+function getToggle(id) {
+  return document.getElementById(id)?.dataset.on === 'true';
+}
+
+function setToggle(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.dataset.on = val ? 'true' : 'false';
+}
+
+function getVal(id) {
+  return document.getElementById(id)?.value.trim() || '';
+}
+
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val || '';
+}
+
+// ══════════════════════════════════════
+// PAGE: CONFIGURAÇÃO DE LOJAS
+// ══════════════════════════════════════
+async function loadPageLojas() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+
+  const { data: configs } = await sb.from('marketplace_configs')
+    .select('*').eq('user_id', session.user.id);
+
+  if (!configs?.length) return;
+
+  const map = Object.fromEntries(configs.map(c => [c.marketplace, c]));
+
+  const fill = (mkt, fields) => {
+    const c = map[mkt];
+    if (!c) return;
+    fields.forEach(([id, key]) => setVal(id, c.config?.[key]));
+    setToggle(`${mkt.replace('mercadolivre','ml').replace('amazon','amz').replace('shopee','sp').replace('magalu','mg').replace('natura','nat').replace('shein','sh')}-converter`, c.converter_links);
+  };
+
+  fill('mercadolivre', [['ml-etiqueta','etiqueta'],['ml-extensao','extensao']]);
+  fill('amazon', [['amz-tag','tag'],['amz-key','key'],['amz-secret','secret'],['amz-cred-id','cred_id'],['amz-cred-secret','cred_secret'],['amz-extensao','extensao']]);
+  if (map['shopee']) {
+    setVal('sp-appid', map['shopee'].config?.appid);
+    setVal('sp-secret', map['shopee'].config?.secret);
+    setToggle('sp-converter', map['shopee'].converter_links);
+    setToggle('sp-pix', map['shopee'].config?.pix_ativo);
+  }
+  fill('magalu', [['mg-tag','tag'],['mg-promoter','promoter_id'],['mg-partner','partner_id']]);
+  fill('natura', [['nat-tag','tag']]);
+  fill('shein', [['sh-extensao','extensao']]);
+}
+
+async function saveMarketplace(mkt) {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+
+  const configs = {
+    mercadolivre: { config: { etiqueta: getVal('ml-etiqueta'), extensao: getVal('ml-extensao') }, converter_links: getToggle('ml-converter') },
+    amazon:       { config: { tag: getVal('amz-tag'), key: getVal('amz-key'), secret: getVal('amz-secret'), cred_id: getVal('amz-cred-id'), cred_secret: getVal('amz-cred-secret'), extensao: getVal('amz-extensao') }, converter_links: getToggle('amz-converter') },
+    shopee:       { config: { appid: getVal('sp-appid'), secret: getVal('sp-secret'), pix_ativo: getToggle('sp-pix') }, converter_links: getToggle('sp-converter') },
+    magalu:       { config: { tag: getVal('mg-tag'), promoter_id: getVal('mg-promoter'), partner_id: getVal('mg-partner') }, converter_links: getToggle('mg-converter') },
+    natura:       { config: { tag: getVal('nat-tag') }, converter_links: getToggle('nat-converter') },
+    shein:        { config: { extensao: getVal('sh-extensao') }, converter_links: getToggle('sh-converter') },
+  };
+
+  const payload = configs[mkt];
+  if (!payload) return;
+
+  // Valida campos obrigatórios
+  if (mkt === 'shopee' && (!getVal('sp-appid') || !getVal('sp-secret'))) {
+    showToast('APP ID e Secret Key são obrigatórios.', 'err'); return;
+  }
+  if (mkt === 'amazon' && !getVal('amz-tag')) {
+    showToast('USER TAG é obrigatório.', 'err'); return;
+  }
+
+  const btn = event?.target;
+  if (btn) { btn.disabled = true; btn.textContent = '⟳ Salvando...'; }
+
+  const { error } = await sb.from('marketplace_configs').upsert({
+    user_id: session.user.id,
+    marketplace: mkt,
+    ...payload,
+    ativo: true,
+  }, { onConflict: 'user_id,marketplace' });
+
+  if (btn) { btn.disabled = false; btn.innerHTML = '💾 Salvar'; }
+
+  if (error) { showToast('Erro: ' + error.message, 'err'); return; }
+  showToast(`${mkt.charAt(0).toUpperCase() + mkt.slice(1)} configurado com sucesso! ✅`, 'ok');
 }
 
 // ══════════════════════════════════════

@@ -396,6 +396,7 @@
         <ul class="dash-nav">
           <li><div class="dash-nav-item active" data-page="painel"><span class="nav-icon">📊</span>Painel</div></li>
           <li><div class="dash-nav-item" data-page="links"><span class="nav-icon">🔗</span>Meus Links</div></li>
+          <li><div class="dash-nav-item" data-page="lojas"><span class="nav-icon">🏪</span>Config. de Lojas</div></li>
           <li><div class="dash-nav-item" data-page="grupos"><span class="nav-icon">💬</span>Grupos WhatsApp</div></li>
           <li><div class="dash-nav-item" data-page="agendamentos"><span class="nav-icon">📅</span>Agendamentos</div></li>
           <li><div class="dash-nav-item" data-page="leads"><span class="nav-icon">👥</span>Leads</div></li>
@@ -485,6 +486,152 @@
             <tbody id="links-page-tbody"><tr><td colspan="5"><div class="empty-state"><span class="empty-icon">🔗</span><div class="empty-title">Carregando...</div></div></td></tr></tbody>
           </table>
         </div>
+      </div>
+
+      <!-- ═══ CONFIG. DE LOJAS ═══ -->
+      <div class="dash-page" id="dp-lojas">
+        <div class="dp-header">
+          <div><div class="dp-title">Configuração de Lojas</div><div class="dp-sub">Configure suas credenciais de afiliado em cada marketplace</div></div>
+        </div>
+
+        <div class="lojas-grid">
+
+          <!-- MERCADO LIVRE -->
+          <div class="loja-card">
+            <div class="loja-card-header">
+              <div class="loja-icon" style="background:#FFE600">🛒</div>
+              <div><div class="loja-name">Mercado Livre</div><div class="loja-sub">Configure sua integração</div></div>
+              <a href="https://www.mercadolibre.com/jms/mlb/lgz/login?platform_id=ml&go=https%3A%2F%2Fwww.mercadolibre.com%2Faffiliates" target="_blank" class="loja-help" style="color:#9c7a00;border:1px solid rgba(255,210,0,.4);border-radius:6px">❓ Como configurar?</a>
+            </div>
+            <div class="loja-card-body">
+              <div class="form-group"><label class="form-label">Etiqueta</label><input class="form-input" id="ml-etiqueta" placeholder="Digite a etiqueta"></div>
+              <div class="form-group">
+                <label class="form-label">Dados Extensão <span class="field-opt">opcional</span></label>
+                <div class="input-wrap"><input class="form-input" id="ml-extensao" type="password" placeholder="Cole os dados da extensão"><button class="input-eye" onclick="toggleEye('ml-extensao',this)">👁</button></div>
+              </div>
+              <div class="loja-footer">
+                <label class="toggle-row" onclick="toggleFormToggle('ml-converter')">
+                  <div class="form-toggle" id="ml-converter" data-on="false"><div class="form-toggle-knob"></div></div>
+                  <span class="toggle-row-label">Converter Links</span>
+                </label>
+                <button class="btn-save-loja" style="background:#FFE600;color:#7a6000" onclick="saveMarketplace('mercadolivre')">💾 Salvar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- AMAZON -->
+          <div class="loja-card">
+            <div class="loja-card-header">
+              <div class="loja-icon" style="background:#FF9900">📦</div>
+              <div><div class="loja-name">Amazon</div><div class="loja-sub">Configure sua integração</div></div>
+              <a href="https://associados.amazon.com.br" target="_blank" class="loja-help" style="color:#FF9900;border:1px solid rgba(255,153,0,.35);border-radius:6px">❓ Como conseguir TAG?</a>
+            </div>
+            <div class="loja-card-body">
+              <div class="loja-banner loja-banner-info"><span class="loja-banner-icon">ℹ️</span><span>Apenas a <strong>USER TAG</strong> é obrigatória</span></div>
+              <div class="form-group"><label class="form-label">USER TAG <span class="field-req">*</span></label><input class="form-input" id="amz-tag" placeholder="Digite seu USER TAG"></div>
+              <div class="form-group"><label class="form-label">Key <span class="field-opt">opcional</span></label><input class="form-input" id="amz-key" placeholder="Digite sua chave de acesso"></div>
+              <div class="form-group"><label class="form-label">Secret Key <span class="field-opt">opcional</span></label><div class="input-wrap"><input class="form-input" id="amz-secret" type="password" placeholder="Digite sua chave secreta"><button class="input-eye" onclick="toggleEye('amz-secret',this)">👁</button></div></div>
+              <div class="form-group"><label class="form-label">Credential ID <span class="field-opt">opcional</span></label><input class="form-input" id="amz-cred-id" placeholder="Digite seu Credential ID"></div>
+              <div class="form-group"><label class="form-label">Credential Secret <span class="field-opt">opcional</span></label><div class="input-wrap"><input class="form-input" id="amz-cred-secret" type="password" placeholder="Digite seu Credential Secret"><button class="input-eye" onclick="toggleEye('amz-cred-secret',this)">👁</button></div></div>
+              <div class="form-group"><label class="form-label">Dados Extensão <span class="field-opt">opcional</span></label><div class="input-wrap"><input class="form-input" id="amz-extensao" type="password" placeholder="Cole os dados da extensão"><button class="input-eye" onclick="toggleEye('amz-extensao',this)">👁</button></div></div>
+              <div class="loja-footer">
+                <label class="toggle-row" onclick="toggleFormToggle('amz-converter')">
+                  <div class="form-toggle" id="amz-converter" data-on="false"><div class="form-toggle-knob"></div></div>
+                  <span class="toggle-row-label">Converter Links</span>
+                </label>
+                <button class="btn-save-loja" style="background:#FF9900;color:#fff" onclick="saveMarketplace('amazon')">💾 Salvar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SHOPEE -->
+          <div class="loja-card">
+            <div class="loja-card-header">
+              <div class="loja-icon" style="background:#EE4D2D">🛍️</div>
+              <div><div class="loja-name">Shopee</div><div class="loja-sub">Configure sua integração</div></div>
+              <a href="https://affiliate.shopee.com.br" target="_blank" class="loja-help" style="color:#EE4D2D;border:1px solid rgba(238,77,45,.35);border-radius:6px">❓ Como conseguir API?</a>
+            </div>
+            <div class="loja-card-body">
+              <div class="loja-banner loja-banner-warn"><span class="loja-banner-icon">⚠️</span><span>APP ID e Secret Key são <strong>obrigatórios</strong></span></div>
+              <div class="form-group"><label class="form-label">APP ID <span class="field-req">*</span></label><input class="form-input" id="sp-appid" placeholder="Digite seu APP ID"></div>
+              <div class="form-group"><label class="form-label">Secret Key <span class="field-req">*</span></label><div class="input-wrap"><input class="form-input" id="sp-secret" type="password" placeholder="Digite sua chave secreta"><button class="input-eye" onclick="toggleEye('sp-secret',this)">👁</button></div></div>
+              <div class="toggle-rows">
+                <label class="toggle-row" onclick="toggleFormToggle('sp-converter')">
+                  <div class="form-toggle" id="sp-converter" data-on="false"><div class="form-toggle-knob"></div></div>
+                  <span class="toggle-row-label">Converter Links</span>
+                </label>
+                <label class="toggle-row" onclick="toggleFormToggle('sp-pix')">
+                  <div class="form-toggle" id="sp-pix" data-on="false"><div class="form-toggle-knob"></div></div>
+                  <span class="toggle-row-label">Ativar Preço PIX</span>
+                </label>
+              </div>
+              <div style="font-size:.75rem;color:var(--tx3);line-height:1.55;margin-bottom:1rem;transition:color .35s">Quando ativado a IA modificará automaticamente o <strong style="color:var(--tx2)">PREÇO COM DESCONTO</strong> para o <strong style="color:var(--tx2)">PREÇO COM PIX</strong>.</div>
+              <div class="loja-footer" style="border-top:none;padding-top:0">
+                <div></div>
+                <button class="btn-save-loja" style="background:#EE4D2D;color:#fff" onclick="saveMarketplace('shopee')">💾 Salvar Configurações</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- MAGALU -->
+          <div class="loja-card">
+            <div class="loja-card-header">
+              <div class="loja-icon" style="background:#0086FF">🏪</div>
+              <div><div class="loja-name">Magalu</div><div class="loja-sub">Configure sua integração</div></div>
+            </div>
+            <div class="loja-card-body">
+              <div class="loja-banner loja-banner-warn"><span class="loja-banner-icon">⚠️</span><span>Insira apenas valores <strong>exatos</strong> fornecidos pela Magalu. Dados inválidos podem impedir a conversão de links.</span></div>
+              <div class="form-group"><label class="form-label">TAG</label><input class="form-input" id="mg-tag" placeholder="Digite sua TAG da Magalu"></div>
+              <div class="form-group"><label class="form-label">Promoter ID</label><input class="form-input" id="mg-promoter" placeholder="Digite o Promoter ID da Magalu"></div>
+              <div class="form-group"><label class="form-label">Partner ID</label><input class="form-input" id="mg-partner" placeholder="Digite o Partner ID da Magalu"></div>
+              <div class="loja-footer">
+                <label class="toggle-row" onclick="toggleFormToggle('mg-converter')">
+                  <div class="form-toggle" id="mg-converter" data-on="false"><div class="form-toggle-knob"></div></div>
+                  <span class="toggle-row-label">Converter Links</span>
+                </label>
+                <button class="btn-save-loja" style="background:#0086FF;color:#fff" onclick="saveMarketplace('magalu')">💾 Salvar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- NATURA -->
+          <div class="loja-card">
+            <div class="loja-card-header">
+              <div class="loja-icon" style="background:#008B4F">🌿</div>
+              <div><div class="loja-name">Natura</div><div class="loja-sub">Configure sua integração</div></div>
+            </div>
+            <div class="loja-card-body">
+              <div class="form-group"><label class="form-label">TAG</label><input class="form-input" id="nat-tag" placeholder="Digite sua TAG da Natura"></div>
+              <div class="loja-footer">
+                <label class="toggle-row" onclick="toggleFormToggle('nat-converter')">
+                  <div class="form-toggle" id="nat-converter" data-on="false"><div class="form-toggle-knob"></div></div>
+                  <span class="toggle-row-label">Converter Links</span>
+                </label>
+                <button class="btn-save-loja" style="background:#008B4F;color:#fff" onclick="saveMarketplace('natura')">💾 Salvar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SHEIN -->
+          <div class="loja-card">
+            <div class="loja-card-header">
+              <div class="loja-icon" style="background:#1A1A1A">👗</div>
+              <div><div class="loja-name">Shein</div><div class="loja-sub">Configure sua integração</div></div>
+              <a href="https://affiliate.shein.com" target="_blank" class="loja-help" style="color:var(--tx2);border:1px solid var(--bdr2);border-radius:6px">❓ Como configurar?</a>
+            </div>
+            <div class="loja-card-body">
+              <div class="form-group"><label class="form-label">Dados Extensão</label><div class="input-wrap"><input class="form-input" id="sh-extensao" type="password" placeholder="Cole os dados da extensão"><button class="input-eye" onclick="toggleEye('sh-extensao',this)">👁</button></div></div>
+              <div class="loja-footer">
+                <label class="toggle-row" onclick="toggleFormToggle('sh-converter')">
+                  <div class="form-toggle" id="sh-converter" data-on="false"><div class="form-toggle-knob"></div></div>
+                  <span class="toggle-row-label">Converter Links</span>
+                </label>
+                <button class="btn-save-loja" style="background:#1A1A1A;color:#fff" onclick="saveMarketplace('shein')">💾 Salvar</button>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /lojas-grid -->
       </div>
 
       <!-- ═══ GRUPOS WHATSAPP ═══ -->

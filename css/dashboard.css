@@ -351,6 +351,101 @@
 }
 .plan-upgrade:hover{opacity:.88}
 
+/* ══ LOJAS ══ */
+.lojas-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem}
+
+.loja-card{
+  background:var(--card);border:1px solid var(--bdr);border-radius:16px;
+  overflow:hidden;transition:background .35s,border-color .35s
+}
+
+.loja-card-header{
+  display:flex;align-items:center;gap:.9rem;
+  padding:1.1rem 1.4rem;border-bottom:1px solid var(--bdr);
+  transition:border-color .35s
+}
+
+.loja-icon{
+  width:44px;height:44px;border-radius:10px;display:flex;
+  align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0
+}
+
+.loja-name{font-size:1rem;font-weight:800;color:var(--tx);letter-spacing:-.01em;transition:color .35s}
+.loja-sub{font-size:.73rem;color:var(--tx3);margin-top:.1rem;transition:color .35s}
+
+.loja-help{
+  margin-left:auto;padding:.35rem .85rem;border-radius:6px;
+  font-size:.72rem;font-weight:700;background:transparent;
+  cursor:pointer;font-family:var(--f);white-space:nowrap;transition:all .18s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:.3rem
+}
+
+.loja-card-body{padding:1.25rem 1.4rem}
+
+.loja-banner{
+  display:flex;align-items:flex-start;gap:.55rem;
+  padding:.7rem .9rem;border-radius:8px;font-size:.78rem;
+  line-height:1.5;margin-bottom:1rem;
+}
+.loja-banner-warn{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22);color:#b45309}
+.loja-banner-info{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);color:#2563eb}
+[data-theme="light"] .loja-banner-warn{color:#92400e}
+[data-theme="light"] .loja-banner-info{color:#1d4ed8}
+.loja-banner-icon{flex-shrink:0;margin-top:.05rem}
+
+.input-wrap{position:relative}
+.input-wrap .form-input{padding-right:2.5rem}
+.input-eye{
+  position:absolute;right:.75rem;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;color:var(--tx3);
+  font-size:.9rem;padding:0;transition:color .18s;line-height:1
+}
+.input-eye:hover{color:var(--tx)}
+
+.field-opt{font-size:.68rem;font-weight:500;color:var(--tx3);margin-left:.3rem;transition:color .35s}
+.field-req{font-size:.68rem;font-weight:700;color:var(--coral);margin-left:.15rem}
+
+.loja-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:1rem;margin-top:.25rem;border-top:1px solid var(--bdr);
+  flex-wrap:wrap;gap:.75rem;transition:border-color .35s
+}
+
+.toggle-row{display:flex;align-items:center;gap:.6rem;cursor:pointer;user-select:none}
+.toggle-row-label{font-size:.82rem;font-weight:600;color:var(--tx2);transition:color .35s}
+
+.form-toggle{
+  width:40px;height:22px;border-radius:99px;
+  background:var(--bg3);border:1px solid var(--bdr);
+  position:relative;cursor:pointer;flex-shrink:0;
+  transition:background .22s,border-color .22s
+}
+.form-toggle[data-on="true"]{background:var(--coral);border-color:var(--coral-d)}
+.form-toggle-knob{
+  position:absolute;top:2px;left:2px;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--tx3);transition:transform .22s,background .22s
+}
+.form-toggle[data-on="true"] .form-toggle-knob{transform:translateX(18px);background:#fff}
+
+.toggle-rows{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem}
+
+.btn-save-loja{
+  padding:.6rem 1.25rem;border-radius:8px;font-size:.84rem;
+  font-weight:700;border:none;cursor:pointer;font-family:var(--f);
+  display:inline-flex;align-items:center;gap:.4rem;
+  white-space:nowrap;transition:opacity .2s,transform .18s;flex-shrink:0
+}
+.btn-save-loja:hover{opacity:.88;transform:translateY(-1px)}
+.btn-save-loja:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.loja-status{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:99px;
+}
+.loja-status-ok{background:rgba(34,197,94,.1);color:#15803d;border:1px solid rgba(34,197,94,.2)}
+.loja-status-off{background:var(--bg2);color:var(--tx3);border:1px solid var(--bdr)}
+
 /* ══ RESPONSIVE ══ */
 @media(max-width:1100px){
   .stats-grid{grid-template-columns:repeat(2,1fr)}
@@ -358,6 +453,7 @@
   .insta-grid{grid-template-columns:1fr}
   .form-row{grid-template-columns:1fr}
   .leads-stats{grid-template-columns:1fr 1fr 1fr}
+  .lojas-grid{grid-template-columns:1fr}
 }
 @media(max-width:900px){
   .dash-sidebar{transform:translateX(-100%)}
