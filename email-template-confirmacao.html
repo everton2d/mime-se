@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirme seu e-mail — Mime-se</title>
+</head>
+<body style="margin:0;padding:0;background:#0C0908;font-family:'Helvetica Neue',Arial,sans-serif">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0C0908;padding:40px 16px">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px">
+
+          <!-- Logo -->
+          <tr>
+            <td align="center" style="padding-bottom:32px">
+              <svg width="64" height="64" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#F2603A"/>
+                    <stop offset="100%" style="stop-color:#F5913A"/>
+                  </linearGradient>
+                </defs>
+                <rect width="500" height="500" rx="110" fill="url(#g)"/>
+                <rect x="80" y="120" width="340" height="300" rx="60" fill="none" stroke="white" stroke-width="38"/>
+                <rect x="80" y="120" width="340" height="110" rx="60" fill="white" opacity="0.25"/>
+                <rect x="80" y="195" width="340" height="30" fill="white" opacity="0.4"/>
+                <path d="M185 310 Q250 370 315 310" fill="none" stroke="white" stroke-width="36" stroke-linecap="round"/>
+              </svg>
+              <div style="margin-top:12px;font-size:22px;font-weight:800;background:linear-gradient(135deg,#F2603A,#F5913A);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.02em">Mime-se ✦</div>
+            </td>
+          </tr>
+
+          <!-- Card principal -->
+          <tr>
+            <td style="background:rgba(28,21,19,.95);border:1px solid rgba(242,96,58,.15);border-radius:20px;padding:40px 36px">
+
+              <!-- Título -->
+              <p style="margin:0 0 8px;font-size:24px;font-weight:800;color:#F5EDE8;letter-spacing:-0.02em;text-align:center">Confirme seu e-mail 🎉</p>
+              <p style="margin:0 0 28px;font-size:15px;color:rgba(245,237,232,.6);text-align:center;line-height:1.6">Você está a um clique de começar a automatizar suas vendas</p>
+
+              <!-- Divisor -->
+              <div style="height:1px;background:linear-gradient(to right,transparent,rgba(242,96,58,.2),transparent);margin-bottom:28px"></div>
+
+              <!-- Mensagem -->
+              <p style="margin:0 0 24px;font-size:15px;color:rgba(245,237,232,.75);line-height:1.7">Olá! Sua conta na <strong style="color:#F2603A">Mime-se Promos</strong> foi criada com sucesso. Clique no botão abaixo para confirmar seu e-mail e ter acesso imediato à plataforma:</p>
+
+              <!-- Botão CTA -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="padding:8px 0 28px">
+                    <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:14px 36px;background:linear-gradient(135deg,#F2603A,#F5913A);color:#ffffff;font-size:16px;font-weight:800;text-decoration:none;border-radius:99px;letter-spacing:-0.01em;box-shadow:0 6px 24px rgba(242,96,58,.35)">
+                      ✅ Confirmar e-mail agora
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Features -->
+              <div style="background:rgba(242,96,58,.06);border:1px solid rgba(242,96,58,.12);border-radius:12px;padding:20px 24px;margin-bottom:24px">
+                <p style="margin:0 0 12px;font-size:13px;font-weight:700;color:#F2603A;text-transform:uppercase;letter-spacing:.06em">O que te espera na plataforma</p>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="padding:4px 0;font-size:13px;color:rgba(245,237,232,.7)">🔗 &nbsp;Geração automática de links de afiliado</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:4px 0;font-size:13px;color:rgba(245,237,232,.7)">💬 &nbsp;Disparo em massa para grupos WhatsApp</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:4px 0;font-size:13px;color:rgba(245,237,232,.7)">🤖 &nbsp;Espelhamento inteligente 24h com IA</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:4px 0;font-size:13px;color:rgba(245,237,232,.7)">📊 &nbsp;Dashboard com métricas em tempo real</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- Link alternativo -->
+              <p style="margin:0;font-size:12px;color:rgba(245,237,232,.35);text-align:center;line-height:1.65">Se o botão não funcionar, copie e cole este link no navegador:<br>
+                <a href="{{ .ConfirmationURL }}" style="color:#F2603A;word-break:break-all;font-size:11px">{{ .ConfirmationURL }}</a>
+              </p>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:24px 0 8px;text-align:center">
+              <p style="margin:0 0 8px;font-size:12px;color:rgba(245,237,232,.3)">Se você não criou uma conta, ignore este e-mail.</p>
+              <p style="margin:0;font-size:12px;color:rgba(245,237,232,.25)">© 2026 Mime-se Promos · Automação de Afiliados com IA</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
