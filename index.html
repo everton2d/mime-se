@@ -382,92 +382,216 @@
 <!-- ═══════ PAGE: DASHBOARD ═══════ -->
 <div class="page" id="page-dashboard">
   <div class="dash-layout">
-    <!-- Sidebar -->
+
+    <!-- SIDEBAR -->
     <aside class="dash-sidebar">
       <div class="dash-logo">Mime-se ✦</div>
       <div class="dash-user">
         <div class="dash-user-name" id="dash-user-name">Carregando...</div>
-        <span class="dash-user-plan" id="dash-plan-badge">FREE</span>
+        <span class="dash-plan-badge" id="dash-plan-badge">FREE</span>
       </div>
-      <ul class="dash-nav">
-        <li><a class="active"><span class="nav-icon">📊</span>Painel</a></li>
-        <li><a><span class="nav-icon">🔗</span>Meus Links</a></li>
-        <li><a><span class="nav-icon">💬</span>Grupos WhatsApp</a></li>
-        <li><a><span class="nav-icon">📅</span>Agendamentos</a></li>
-        <li><a><span class="nav-icon">👥</span>Leads</a></li>
-        <li><a><span class="nav-icon">📸</span>Instagram</a></li>
-        <li><a><span class="nav-icon">⚙️</span>Configurações</a></li>
-      </ul>
+
+      <div class="dash-nav-section">
+        <div class="dash-nav-label">Principal</div>
+        <ul class="dash-nav">
+          <li><div class="dash-nav-item active" data-page="painel"><span class="nav-icon">📊</span>Painel</div></li>
+          <li><div class="dash-nav-item" data-page="links"><span class="nav-icon">🔗</span>Meus Links</div></li>
+          <li><div class="dash-nav-item" data-page="grupos"><span class="nav-icon">💬</span>Grupos WhatsApp</div></li>
+          <li><div class="dash-nav-item" data-page="agendamentos"><span class="nav-icon">📅</span>Agendamentos</div></li>
+          <li><div class="dash-nav-item" data-page="leads"><span class="nav-icon">👥</span>Leads</div></li>
+          <li><div class="dash-nav-item" data-page="instagram"><span class="nav-icon">📸</span>Instagram</div></li>
+        </ul>
+      </div>
+
+      <div class="dash-divider"></div>
+
+      <div class="dash-nav-section">
+        <div class="dash-nav-label">Conta</div>
+        <ul class="dash-nav">
+          <li><div class="dash-nav-item" data-page="config"><span class="nav-icon">⚙️</span>Configurações</div></li>
+        </ul>
+      </div>
+
       <div class="dash-bottom">
-        <button class="dash-logout" onclick="handleLogout()">
-          <span>🚪</span> Sair da conta
-        </button>
+        <button class="dash-logout" onclick="handleLogout()"><span>🚪</span> Sair da conta</button>
       </div>
     </aside>
 
-    <!-- Conteúdo principal -->
+    <!-- MAIN -->
     <main class="dash-main">
-      <div class="dash-header">
-        <div>
-          <div class="dash-title" id="dash-welcome">Bem-vindo!</div>
-          <div class="dash-subtitle">Aqui está um resumo da sua operação de hoje</div>
+
+      <!-- ═══ PAINEL ═══ -->
+      <div class="dash-page active" id="dp-painel">
+        <div class="dp-header">
+          <div>
+            <div class="dp-title" id="dash-greeting">Carregando...</div>
+            <div class="dp-sub" id="dash-date"></div>
+          </div>
+          <div class="dp-header-actions">
+            <button class="toggle" id="dash-toggle" title="Alternar tema"></button>
+          </div>
         </div>
-        <div class="dash-toggle-wrap">
-          <button class="toggle" id="dash-toggle" title="Alternar tema"></button>
+
+        <div class="stats-grid">
+          <div class="stat-card"><span class="stat-icon">🔗</span><div class="stat-val" id="stat-links">0</div><div class="stat-label">Links gerados</div></div>
+          <div class="stat-card"><span class="stat-icon">💬</span><div class="stat-val" id="stat-grupos">0</div><div class="stat-label">Grupos ativos</div></div>
+          <div class="stat-card"><span class="stat-icon">📤</span><div class="stat-val" id="stat-disparos">0</div><div class="stat-label">Disparos enviados</div></div>
+          <div class="stat-card"><span class="stat-icon">👥</span><div class="stat-val" id="stat-leads">0</div><div class="stat-label">Leads ativos</div></div>
+        </div>
+
+        <div class="dash-grid-2">
+          <div class="chart-card">
+            <div class="chart-header">
+              <div class="chart-title">Atividade de links</div>
+              <div class="chart-period">Últimos 7 dias</div>
+            </div>
+            <canvas id="activity-chart"></canvas>
+          </div>
+          <div class="quick-card">
+            <div class="section-label">⚡ Gerar link de afiliado</div>
+            <input class="quick-input" id="quick-url" type="url" placeholder="Cole o link do produto...">
+            <button class="btn-primary" id="quick-btn" onclick="gerarLink()">⚡ Gerar Link</button>
+            <div class="quick-result" id="quick-result"></div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-card-header"><div class="table-card-title">🕐 Links recentes</div></div>
+          <table class="dash-table">
+            <thead><tr><th>Plataforma</th><th>Produto</th><th>Preço</th><th>Data</th></tr></thead>
+            <tbody id="recent-links-tbody"><tr><td colspan="4"><div class="empty-state"><span class="empty-icon">🔗</span><div class="empty-title">Carregando...</div></div></td></tr></tbody>
+          </table>
         </div>
       </div>
 
-      <!-- Stats -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon">🔗</div>
-          <div class="stat-val" id="stat-links">0</div>
-          <div class="stat-label">Links gerados</div>
+      <!-- ═══ MEUS LINKS ═══ -->
+      <div class="dash-page" id="dp-links">
+        <div class="dp-header">
+          <div><div class="dp-title">Meus Links</div><div class="dp-sub">Histórico de todos os links de afiliado gerados</div></div>
+          <div class="dp-header-actions"><button class="btn-outline-sm" onclick="showDashPage('painel')">+ Novo Link</button></div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon">💬</div>
-          <div class="stat-val" id="stat-grupos">0</div>
-          <div class="stat-label">Grupos ativos</div>
+        <div class="filter-tabs">
+          <button class="filter-tab active" onclick="setFilter('todos',this)">Todos</button>
+          <button class="filter-tab" onclick="setFilter('shopee',this)">🛍️ Shopee</button>
+          <button class="filter-tab" onclick="setFilter('amazon',this)">📦 Amazon</button>
+          <button class="filter-tab" onclick="setFilter('magalu',this)">🏪 Magalu</button>
+          <button class="filter-tab" onclick="setFilter('mercadolivre',this)">🟡 Mercado Livre</button>
+          <button class="filter-tab" onclick="setFilter('natura',this)">🌿 Natura</button>
+          <button class="filter-tab" onclick="setFilter('outro',this)">Outros</button>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon">📤</div>
-          <div class="stat-val" id="stat-disparos">0</div>
-          <div class="stat-label">Disparos enviados</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">👥</div>
-          <div class="stat-val" id="stat-leads">0</div>
-          <div class="stat-label">Leads ativos</div>
+        <div class="table-card">
+          <table class="dash-table">
+            <thead><tr><th>Plataforma</th><th>Produto</th><th>Preço</th><th>Data</th><th>Ação</th></tr></thead>
+            <tbody id="links-page-tbody"><tr><td colspan="5"><div class="empty-state"><span class="empty-icon">🔗</span><div class="empty-title">Carregando...</div></div></td></tr></tbody>
+          </table>
         </div>
       </div>
 
-      <!-- Gerador rápido -->
-      <div class="quick-card">
-        <div class="dash-section-title">⚡ Gerar link de afiliado</div>
-        <div class="quick-form">
-          <input class="quick-input" id="quick-url" type="url" placeholder="Cole o link do produto (Shopee, Amazon, Magalu, Mercado Livre...)">
-          <button class="quick-btn" id="quick-btn" onclick="gerarLink()">⚡ Gerar Link</button>
+      <!-- ═══ GRUPOS WHATSAPP ═══ -->
+      <div class="dash-page" id="dp-grupos">
+        <div class="dp-header">
+          <div><div class="dp-title">Grupos WhatsApp</div><div class="dp-sub">Gerencie os grupos onde suas ofertas são disparadas</div></div>
+          <div class="dp-header-actions"><button class="btn-outline-sm">+ Adicionar Grupo</button></div>
         </div>
-        <div class="quick-result" id="quick-result"></div>
+        <div id="grupos-container"><div class="empty-state"><span class="empty-icon">💬</span><div class="empty-title">Carregando...</div></div></div>
       </div>
 
-      <!-- Links recentes -->
-      <div class="quick-card">
-        <div class="dash-section-title">🕐 Links recentes</div>
-        <table class="links-table">
-          <thead>
-            <tr>
-              <th>Plataforma</th>
-              <th>Produto</th>
-              <th>Preço</th>
-              <th>Data</th>
-            </tr>
-          </thead>
-          <tbody id="links-tbody">
-            <tr><td colspan="4"><div class="empty-state"><div class="empty-icon">🔗</div><div>Carregando...</div></div></td></tr>
-          </tbody>
-        </table>
+      <!-- ═══ AGENDAMENTOS ═══ -->
+      <div class="dash-page" id="dp-agendamentos">
+        <div class="dp-header">
+          <div><div class="dp-title">Agendamentos</div><div class="dp-sub">Programe disparos para os horários de maior engajamento</div></div>
+        </div>
+        <div class="coming-soon-card">
+          <span style="font-size:3rem;display:block;margin-bottom:1rem">📅</span>
+          <div class="coming-title">Em desenvolvimento</div>
+          <div class="coming-desc">O módulo de agendamento está sendo construído. Em breve você poderá:</div>
+          <ul class="coming-features">
+            <li>Programar envios para horários específicos</li>
+            <li>Configurar intervalos entre disparos (1–30 min)</li>
+            <li>Organizar filas por nicho de produto</li>
+            <li>Definir horário de início e fim de operação</li>
+            <li>Visualizar calendário semanal de publicações</li>
+          </ul>
+          <button class="btn-save" style="margin:0 auto;display:block" onclick="showToast('Você será notificado quando disponível! 🚀','ok')">Quero ser notificado</button>
+        </div>
       </div>
+
+      <!-- ═══ LEADS ═══ -->
+      <div class="dash-page" id="dp-leads">
+        <div class="dp-header">
+          <div><div class="dp-title">Gestão de Leads</div><div class="dp-sub">Acompanhe os membros dos seus grupos em tempo real</div></div>
+        </div>
+        <div class="leads-stats">
+          <div class="lead-stat"><div class="lead-stat-val" id="leads-total">0</div><div class="lead-stat-label">Total de leads</div></div>
+          <div class="lead-stat"><div class="lead-stat-val" id="leads-ativos">0</div><div class="lead-stat-label">Leads ativos</div></div>
+          <div class="lead-stat"><div class="lead-stat-val" id="leads-saidos">0</div><div class="lead-stat-label">Saíram do grupo</div></div>
+        </div>
+        <div class="table-card">
+          <table class="dash-table">
+            <thead><tr><th>Telefone</th><th>Grupo</th><th>Entrou em</th><th>Status</th></tr></thead>
+            <tbody id="leads-tbody"><tr><td colspan="4"><div class="empty-state"><span class="empty-icon">👥</span><div class="empty-title">Carregando...</div></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══ INSTAGRAM ═══ -->
+      <div class="dash-page" id="dp-instagram">
+        <div class="dp-header">
+          <div><div class="dp-title">Instagram</div><div class="dp-sub">Automatize sua presença e venda mais nas redes sociais</div></div>
+        </div>
+        <div class="insta-grid">
+          <div class="insta-card"><span class="badge-soon">Em breve</span><div class="insta-card-icon">💬</div><div class="insta-card-title">Resposta Automática</div><div class="insta-card-desc">A IA responde comentários e DMs automaticamente. Configure gatilhos por palavra-chave e nunca perca uma venda.</div></div>
+          <div class="insta-card"><span class="badge-soon">Em breve</span><div class="insta-card-icon">📅</div><div class="insta-card-title">Agendamento de Posts</div><div class="insta-card-desc">Agende posts para feed, stories, reels e carrossel. Programe a semana inteira de uma vez e mantenha seu perfil sempre ativo.</div></div>
+          <div class="insta-card"><span class="badge-soon">Em breve</span><div class="insta-card-icon">📸</div><div class="insta-card-title">Stories Automáticos</div><div class="insta-card-desc">Gere stories profissionais com imagem do produto, preço e CTA. Com a cara da sua marca, sem abrir o Canva.</div></div>
+          <div class="insta-card"><span class="badge-soon">Em breve</span><div class="insta-card-icon">🎬</div><div class="insta-card-title">Reels e Carrossel</div><div class="insta-card-desc">Templates de Reels e carrossel otimizados para afiliados. Formatos que performam melhor para produto, promoção e depoimento.</div></div>
+        </div>
+      </div>
+
+      <!-- ═══ CONFIGURAÇÕES ═══ -->
+      <div class="dash-page" id="dp-config">
+        <div class="dp-header">
+          <div><div class="dp-title">Configurações</div><div class="dp-sub">Gerencie seu perfil e preferências da plataforma</div></div>
+        </div>
+
+        <div class="config-section">
+          <div class="config-section-header">👤 Perfil</div>
+          <div class="config-section-body">
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Nome completo</label><input class="form-input" id="cfg-nome" type="text" placeholder="Seu nome"></div>
+              <div class="form-group"><label class="form-label">WhatsApp</label><input class="form-input" id="cfg-wpp" type="tel" placeholder="(11) 99999-9999"></div>
+            </div>
+            <div class="form-group"><label class="form-label">E-mail</label><input class="form-input" id="cfg-email" type="email" disabled></div>
+            <button class="btn-save" id="btn-save-profile" onclick="handleSaveProfile()">Salvar alterações</button>
+          </div>
+        </div>
+
+        <div class="config-section">
+          <div class="config-section-header">⚙️ Preferências de disparo</div>
+          <div class="config-section-body">
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Intervalo entre disparos (minutos)</label><input class="form-input" id="cfg-intervalo" type="number" min="1" max="30" value="5"></div>
+              <div class="form-group"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Horário de início</label><input class="form-input" id="cfg-inicio" type="time" value="09:00"></div>
+              <div class="form-group"><label class="form-label">Horário de fim</label><input class="form-input" id="cfg-fim" type="time" value="21:00"></div>
+            </div>
+            <button class="btn-save" id="btn-save-config" onclick="handleSaveConfig()">Salvar preferências</button>
+          </div>
+        </div>
+
+        <div class="config-section">
+          <div class="config-section-header">💎 Meu Plano</div>
+          <div class="config-section-body">
+            <div class="plan-card">
+              <div class="plan-icon">🚀</div>
+              <div><div class="plan-name" id="cfg-plan-name">Free</div><div class="plan-desc">Recursos essenciais para começar a divulgar</div></div>
+              <button class="plan-upgrade" onclick="showPage('home')">Fazer upgrade →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
 </div>
