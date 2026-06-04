@@ -22,6 +22,9 @@ function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
   window.scrollTo(0, 0);
+  // Oculta o nav principal dentro do dashboard (tem navegação própria)
+  const mainNav = document.getElementById('main-nav');
+  if (mainNav) mainNav.style.display = name === 'dashboard' ? 'none' : '';
   ['reg-err','reg-ok','login-err','login-ok'].forEach(id => {
     const el = document.getElementById(id);
     if(el){ el.className = 'alert ' + (id.includes('err') ? 'alert-err' : 'alert-ok'); el.textContent = ''; }

@@ -216,12 +216,31 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:66px;padding:0 5%;
 .fq.open .fq-ico{transform:rotate(45deg);background:var(--grad);color:#fff;border-color:var(--coral)}
 .fq-a{padding:0 1.35rem;font-size:.83rem;color:var(--tx2);line-height:1.72;max-height:0;overflow:hidden;transition:max-height .32s,padding .32s}
 .fq.open .fq-a{max-height:180px;padding:0 1.35rem 1.1rem}
-/* ══ CTA SECTION ══ */
-.cta-sec{padding:90px 0;text-align:center;position:relative;overflow:hidden}
-.cta-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(242,96,58,.09) 0%,transparent 72%)}
-.cta-checks{display:flex;gap:1.75rem;justify-content:center;flex-wrap:wrap;margin-top:1.75rem}
-.cta-ck{display:flex;align-items:center;gap:.45rem;font-size:.83rem;color:var(--tx2)}
-.cta-ck::before{content:'✓';color:var(--coral);font-weight:800}
+/* ══ CTA BANNER ══ */
+.cta-banner{background:var(--grad);position:relative;overflow:hidden;padding:80px 0 90px}
+.cta-banner::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,.07);pointer-events:none}
+.cta-banner::after{content:'';position:absolute;bottom:-60px;left:-60px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none}
+.cta-banner-inner{text-align:center;position:relative;z-index:1}
+.cta-banner-title{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;color:#fff;letter-spacing:-.035em;line-height:1.1;margin-bottom:1rem}
+.cta-banner-sub{font-size:1.05rem;color:rgba(255,255,255,.82);line-height:1.65;margin-bottom:2.25rem}
+.cta-banner-btn{display:inline-flex;align-items:center;gap:.5rem;padding:1rem 2.5rem;border-radius:99px;background:#fff;color:var(--coral);font-size:1rem;font-weight:800;border:none;cursor:pointer;font-family:var(--f);transition:all .22s;box-shadow:0 8px 28px rgba(0,0,0,.2)}
+.cta-banner-btn:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,0,0,.25)}
+.cta-banner-dots{margin-top:1.25rem;font-size:.85rem;color:rgba(255,255,255,.72)}
+
+/* ══ SITE FOOTER ══ */
+.site-footer{background:#0f0c0b;padding:56px 0 0;position:relative;z-index:1}
+[data-theme="light"] .site-footer{background:#1a1412}
+.sf-grid{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr 1fr;gap:2rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.08)}
+.sf-logo{font-size:1.2rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.75rem}
+.sf-desc{font-size:.83rem;color:rgba(255,255,255,.45);line-height:1.7;max-width:220px;margin-bottom:1.25rem}
+.sf-social{display:flex;gap:.6rem}
+.sf-social-btn{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.55);transition:all .2s;text-decoration:none}
+.sf-social-btn:hover{background:rgba(242,96,58,.2);border-color:rgba(242,96,58,.4);color:var(--coral)}
+.sf-col-title{font-size:.75rem;font-weight:700;color:rgba(255,255,255,.9);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.9rem}
+.sf-link{display:block;font-size:.83rem;color:rgba(255,255,255,.45);text-decoration:none;margin-bottom:.55rem;transition:color .18s;cursor:pointer}
+.sf-link:hover{color:rgba(255,255,255,.85)}
+.sf-bottom{padding:1.25rem 0;text-align:center;font-size:.75rem;color:rgba(255,255,255,.25)}
+
 /* ══ AUTH PAGES ══ */
 .auth-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 1.5rem 3rem;position:relative;z-index:1}
 .auth-split{width:100%;max-width:960px;display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--card);border:1px solid var(--bdr);border-radius:var(--r24);overflow:hidden;box-shadow:0 32px 80px var(--sh)}
@@ -280,8 +299,11 @@ footer{padding:2.5rem 5%;border-top:1px solid var(--bdr);display:flex;justify-co
   .nav-links{display:none}
   .auth-split{grid-template-columns:1fr}.auth-left{padding:1.75rem;min-height:auto}
   .auth-left-body,.auth-left-checks{display:none}
+  .sf-grid{grid-template-columns:1fr 1fr;gap:1.5rem}
+  .sf-brand{grid-column:span 2}
 }
 @media(max-width:580px){
   .prob-grid,.arsenal-grid,.testi-grid,.price-grid{grid-template-columns:1fr}
   .hero-kpi{gap:1rem}.mode-tabs{flex-direction:column;border-radius:var(--r16)}
+  .sf-grid{grid-template-columns:1fr 1fr}
 }
