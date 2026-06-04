@@ -7,7 +7,7 @@ function showDashPage(name) {
   document.querySelectorAll('.dash-nav-item').forEach(item =>
     item.classList.toggle('active', item.dataset.page === name)
   );
-  const loaders = { painel: loadPainel, links: loadPageLinks, grupos: loadPageGrupos, leads: loadPageLeads, config: loadPageConfig, lojas: loadPageLojas };
+  const loaders = { painel: loadPainel, links: loadPageLinks, grupos: loadPageGrupos, leads: loadPageLeads, config: loadPageConfig, lojas: loadPageLojas, stories: loadPageStories, disparo: loadPageDisparo };
   loaders[name]?.();
 }
 
@@ -520,4 +520,175 @@ async function handleSaveConfig() {
   btn.disabled = false; btn.textContent = 'Salvar preferências';
   if (error) { showToast('Erro: ' + error.message, 'err'); return; }
   showToast('Configurações salvas!', 'ok');
+}
+
+// ══════════════════════════════════════
+// PAGE: TEMPLATE DE STORIES
+// ══════════════════════════════════════
+async function loadPageStories() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+
+  const { data } = await sb.from('template_stories').select('*').eq('user_id', session.user.id).single();
+  if (!data) return;
+
+  // Layout
+  document.querySelectorAll('.layout-card').forEach(c => {
+    c.classList.toggle('active', c.dataset.layout === data.layout);
+  });
+
+  // Modelo
+  document.querySelectorAll('.modelo-thumb').forEach(t => {
+    t.classList.toggle('active', parseInt(t.dataset.modelo) === data.modelo);
+  });
+
+  // Cores
+  const cores = data.cores || {};
+  const setColor = (id, valId, val) => {
+    const el = document.getElementById(id);
+    const vl = document.getElementById(valId);
+    if (el && val) { el.value = val; }
+    if (vl && val) { vl.textContent = val; }
+  };
+  setColor('cor-nome', 'cor-nome-val', cores.nome_produto);
+  setColor('cor-preco-de', 'cor-preco-de-val', cores.preco_de);
+  setColor('cor-preco-por', 'cor-preco-por-val', cores.preco_por);
+  setColor('cor-fundo-preco', 'cor-fundo-preco-val', cores.fundo_preco_por);
+  setColor('cor-parc', 'cor-parc-val', cores.parcelamento);
+
+  updateStoryPreview();
+}
+
+function selectLayout(el) {
+  document.querySelectorAll('.layout-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectModelo(el) {
+  document.querySelectorAll('.modelo-thumb').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  // Update preview bg based on modelo
+  const bgs = ['','linear-gradient(160deg,#ff6b35,#ee4d2d)','linear-gradient(160deg,#232f3e,#ff9900)','linear-gradient(160deg,#0086ff,#003fa5)','linear-gradient(160deg,#ffe600,#ffa500)','linear-gradient(160deg,#008b4f,#006b3c)','linear-gradient(160deg,#1a1a1a,#4a0080)','linear-gradient(160deg,#F2603A,#F5913A)','linear-gradient(160deg,#2d2d2d,#555)'];
+  const bg = document.getElementById('sp-bg');
+  if (bg) bg.style.background = bgs[parseInt(el.dataset.modelo)] || bgs[1];
+}
+
+function updateColorVal(input, valId) {
+  const el = document.getElementById(valId);
+  if (el) el.textContent = input.value;
+}
+
+function updateStoryPreview() {
+  const get = id => document.getElementById(id)?.value || '';
+  const setStyle = (id, prop, val) => { const el = document.getElementById(id); if (el) el.style[prop] = val; };
+
+  setStyle('sp-pname', 'color', get('cor-nome'));
+  setStyle('sp-pde', 'color', get('cor-preco-de'));
+  setStyle('sp-ppor', 'color', get('cor-preco-por'));
+  setStyle('sp-ppor-wrap', 'background', get('cor-fundo-preco'));
+  setStyle('sp-parc', 'color', get('cor-parc'));
+}
+
+async function saveTemplateStories() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+
+  const layout = document.querySelector('.layout-card.active')?.dataset.layout || 'padrao';
+  const modelo = parseInt(document.querySelector('.modelo-thumb.active')?.dataset.modelo || '1');
+  const cores = {
+    nome_produto:   document.getElementById('cor-nome')?.value,
+    preco_de:       document.getElementById('cor-preco-de')?.value,
+    preco_por:      document.getElementById('cor-preco-por')?.value,
+    fundo_preco_por:document.getElementById('cor-fundo-preco')?.value,
+    parcelamento:   document.getElementById('cor-parc')?.value,
+  };
+
+  const { error } = await sb.from('template_stories').upsert(
+    { user_id: session.user.id, layout, modelo, cores },
+    { onConflict: 'user_id' }
+  );
+  if (error) { showToast('Erro: ' + error.message, 'err'); return; }
+  showToast('Template de Stories salvo! ✅', 'ok');
+}
+
+function handleStoryUpload(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  if (file.size > 3.1 * 1024 * 1024) { showToast('Arquivo muito grande. Máximo 3.1 MB.', 'err'); return; }
+  const url = URL.createObjectURL(file);
+  const bg = document.getElementById('sp-bg');
+  if (bg) { bg.style.background = 'none'; bg.style.backgroundImage = `url(${url})`; bg.style.backgroundSize = 'cover'; bg.style.backgroundPosition = 'center'; }
+  showToast('Imagem carregada! Salve para confirmar.', 'ok');
+}
+
+// ══════════════════════════════════════
+// PAGE: TEXTO DE DISPARO
+// ══════════════════════════════════════
+const _EXEMPLO = { '{{gatilho_de_venda}}':'🔥 BAIXOUUU 🔥', '{{titulo}}':'Kit Amaciante Comfort 1,5L', '{{preco_de}}':'R$ 86,25', '{{preco_por}}':'R$ 32,00', '{{parcelamento}}':'21x de R$ 1,50 sem juros', '{{recorrencia}}':'R$ 29,00', '{{frete}}':'Frete grátis', '{{cupom}}':'PROMOS30', '{{informacao_extra}}':'A informação extra quando tiver aparecerá aqui', '{{link_comissionado}}':'https://exemplo.com.br', '{{loja}}':'Shopee', '{{link_site_promos_pagina_inicial}}':'https://mimesepromos.com', '{{link_comissionado_2}}':'https://exemplo2.com.br' };
+
+async function loadPageDisparo() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+
+  const { data } = await sb.from('texto_disparo').select('*').eq('user_id', session.user.id).single();
+  const textarea = document.getElementById('disparo-template');
+  if (textarea) {
+    textarea.value = data?.template_geral || `🚨 {{gatilho_de_venda}} 🚨\n\n🛒 {{titulo}}\n\n❌ De: ~{{preco_de}}~\n🔥 Por: *{{preco_por}}*🔥\n\n💳 Parcelado em: {{parcelamento}}\n🔁 Recorrência: {{recorrencia}}\n🎁 {{frete}}\n🏷️ Use o cupom: {{cupom}}\nℹ️ {{informacao_extra}}\n\n👉 Compre aqui: {{link_comissionado}}\n\nPromoção sujeita a alteração a qualquer momento ⚠️`;
+    updateDisparoPreview();
+  }
+  if (data?.modo_avancado !== undefined) setToggle('disparo-adv', data.modo_avancado);
+}
+
+function updateDisparoPreview() {
+  const raw = document.getElementById('disparo-template')?.value || '';
+  let rendered = raw;
+  Object.entries(_EXEMPLO).forEach(([k, v]) => { rendered = rendered.replaceAll(k, v); });
+  // Basic formatting render
+  rendered = rendered
+    .replace(/\*([^*]+)\*/g, '<strong>$1</strong>')
+    .replace(/_([^_]+)_/g, '<em>$1</em>')
+    .replace(/~([^~]+)~/g, '<s>$1</s>');
+  const preview = document.getElementById('disparo-preview');
+  if (preview) { preview.innerHTML = rendered.replace(/\n/g, '<br>'); }
+}
+
+function insertVar(varStr) {
+  const ta = document.getElementById('disparo-template');
+  if (!ta) return;
+  const s = ta.selectionStart, e = ta.selectionEnd;
+  ta.value = ta.value.slice(0, s) + varStr + ta.value.slice(e);
+  ta.selectionStart = ta.selectionEnd = s + varStr.length;
+  ta.focus();
+  updateDisparoPreview();
+  showToast('Variável inserida!', 'ok');
+}
+
+function showModelosProntos() {
+  const modelos = [
+    `🚨 {{gatilho_de_venda}} 🚨\n\n🛒 {{titulo}}\n\n❌ De: ~{{preco_de}}~\n🔥 Por: *{{preco_por}}*🔥\n\n💳 {{parcelamento}}\n🎁 {{frete}}\n🏷️ Cupom: {{cupom}}\n\n👉 {{link_comissionado}}\n\n⚠️ Promoção sujeita a alteração`,
+    `🔥 *{{titulo}}*\n\nDe ~{{preco_de}}~ por apenas *{{preco_por}}* 🤩\n\n{{parcelamento}}\n{{frete}}\n\n🔗 {{link_comissionado}}`,
+    `⚡ ACHADO DO DIA ⚡\n\n📦 {{titulo}}\n💰 {{preco_por}}\n\n{{cupom}}\n{{frete}}\n\n➡️ {{link_comissionado}}`,
+  ];
+  const ta = document.getElementById('disparo-template');
+  if (!ta) return;
+  const idx = (window._modeloIdx || 0) % modelos.length;
+  ta.value = modelos[idx];
+  window._modeloIdx = idx + 1;
+  updateDisparoPreview();
+  showToast(`Modelo ${idx + 1} carregado!`, 'ok');
+}
+
+async function saveTextoDisparo() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+
+  const template_geral = document.getElementById('disparo-template')?.value || '';
+  const modo_avancado = getToggle('disparo-adv');
+
+  const { error } = await sb.from('texto_disparo').upsert(
+    { user_id: session.user.id, template_geral, modo_avancado },
+    { onConflict: 'user_id' }
+  );
+  if (error) { showToast('Erro: ' + error.message, 'err'); return; }
+  showToast('Modelo de disparo salvo! ✅', 'ok');
 }

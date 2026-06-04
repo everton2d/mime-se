@@ -400,6 +400,8 @@
           <li><div class="dash-nav-item" data-page="grupos"><span class="nav-icon">💬</span>Grupos WhatsApp</div></li>
           <li><div class="dash-nav-item" data-page="agendamentos"><span class="nav-icon">📅</span>Agendamentos</div></li>
           <li><div class="dash-nav-item" data-page="leads"><span class="nav-icon">👥</span>Leads</div></li>
+          <li><div class="dash-nav-item" data-page="stories"><span class="nav-icon">🎨</span>Template Stories</div></li>
+          <li><div class="dash-nav-item" data-page="disparo"><span class="nav-icon">✉️</span>Texto de Disparo</div></li>
           <li><div class="dash-nav-item" data-page="instagram"><span class="nav-icon">📸</span>Instagram</div></li>
         </ul>
       </div>
@@ -679,6 +681,215 @@
             <tbody id="leads-tbody"><tr><td colspan="4"><div class="empty-state"><span class="empty-icon">👥</span><div class="empty-title">Carregando...</div></div></td></tr></tbody>
           </table>
         </div>
+      </div>
+
+      <!-- ═══ TEMPLATE DE STORIES ═══ -->
+      <div class="dash-page" id="dp-stories">
+        <div class="dp-header">
+          <div><div class="dp-title">Template de Stories</div><div class="dp-sub">Personalize o layout e as cores dos seus stories de afiliado</div></div>
+          <div class="dp-header-actions"><button class="btn-save" onclick="saveTemplateStories()">💾 Salvar</button></div>
+        </div>
+        <div class="page-split">
+          <div class="page-split-main">
+
+            <!-- Layout -->
+            <div class="content-card">
+              <div class="content-card-title">Layout</div>
+              <div class="layout-grid">
+                <div class="layout-card active" data-layout="padrao" onclick="selectLayout(this)">
+                  <div class="layout-preview">
+                    <div class="lp-bar"></div>
+                    <div class="lp-img"></div>
+                    <div class="lp-info"></div>
+                    <div class="lp-btn"></div>
+                  </div>
+                  <div class="layout-label">Padrão</div>
+                </div>
+                <div class="layout-card" data-layout="expandido" onclick="selectLayout(this)">
+                  <div class="layout-preview" style="padding:0;overflow:hidden">
+                    <div class="lp-img-exp"></div>
+                    <div class="lp-overlay">
+                      <div class="lp-ol-title"></div>
+                      <div class="lp-ol-price"></div>
+                      <div class="lp-ol-btn"></div>
+                    </div>
+                  </div>
+                  <div class="layout-label" style="margin-top:.55rem">Expandido</div>
+                </div>
+                <div class="layout-card" data-layout="engajamento" onclick="selectLayout(this)">
+                  <div class="layout-preview" style="padding:0;overflow:hidden;background:var(--bg3)">
+                    <div style="flex:1;background:var(--bg2);margin:6px 6px 0;border-radius:4px;transition:background .35s"></div>
+                    <div class="lp-cta-big"><div class="lp-cta-text"></div></div>
+                  </div>
+                  <div class="layout-label" style="margin-top:.55rem">Engajamento</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modelos Prontos -->
+            <div class="content-card">
+              <div class="content-card-title">Modelos Prontos <span class="content-card-sub">(8 Opções)</span></div>
+              <div class="modelos-scroll" id="modelos-scroll">
+                <div class="modelo-thumb active" data-modelo="1" onclick="selectModelo(this)"><div class="modelo-img" style="background:linear-gradient(160deg,#ff6b35,#ee4d2d);justify-content:flex-end"><div style="background:rgba(255,255,255,.15);flex:1;border-radius:4px;margin-bottom:4px"></div><div style="height:14px;background:#fff;border-radius:3px;opacity:.9"></div></div><div class="modelo-tag">Shopee</div></div>
+                <div class="modelo-thumb" data-modelo="2" onclick="selectModelo(this)"><div class="modelo-img" style="background:linear-gradient(160deg,#232f3e,#ff9900);justify-content:flex-end"><div style="background:rgba(255,255,255,.12);flex:1;border-radius:4px;margin-bottom:4px"></div><div style="height:14px;background:#ff9900;border-radius:3px"></div></div><div class="modelo-tag">Amazon</div></div>
+                <div class="modelo-thumb" data-modelo="3" onclick="selectModelo(this)"><div class="modelo-img" style="background:linear-gradient(160deg,#0086ff,#003fa5);justify-content:flex-end"><div style="background:rgba(255,255,255,.12);flex:1;border-radius:4px;margin-bottom:4px"></div><div style="height:14px;background:#fff;border-radius:3px;opacity:.85"></div></div><div class="modelo-tag">Magalu</div></div>
+                <div class="modelo-thumb" data-modelo="4" onclick="selectModelo(this)"><div class="modelo-img" style="background:linear-gradient(160deg,#ffe600,#ffa500);justify-content:flex-end"><div style="background:rgba(0,0,0,.1);flex:1;border-radius:4px;margin-bottom:4px"></div><div style="height:14px;background:#333;border-radius:3px"></div></div><div class="modelo-tag">ML</div></div>
+                <div class="modelo-thumb" data-modelo="5" onclick="selectModelo(this)"><div class="modelo-img" style="background:linear-gradient(160deg,#008b4f,#006b3c);justify-content:flex-end"><div style="background:rgba(255,255,255,.12);flex:1;border-radius:4px;margin-bottom:4px"></div><div style="height:14px;background:#fff;border-radius:3px;opacity:.8"></div></div><div class="modelo-tag">Natura</div></div>
+                <div class="modelo-thumb" data-modelo="6" onclick="selectModelo(this)"><div class="modelo-img" style="background:linear-gradient(160deg,#1a1a1a,#4a0080);justify-content:flex-end"><div style="background:rgba(255,255,255,.1);flex:1;border-radius:4px;margin-bottom:4px"></div><div style="height:14px;background:#fff;border-radius:3px;opacity:.7"></div></div><div class="modelo-tag">Shein</div></div>
+                <div class="modelo-thumb" data-modelo="7" onclick="selectModelo(this)"><div class="modelo-img" style="background:linear-gradient(160deg,#F2603A,#F5913A);justify-content:flex-end"><div style="background:rgba(255,255,255,.15);flex:1;border-radius:4px;margin-bottom:4px"></div><div style="height:14px;background:#fff;border-radius:3px;opacity:.9"></div></div><div class="modelo-tag">Promos</div></div>
+                <div class="modelo-thumb" data-modelo="8" onclick="selectModelo(this)"><div class="modelo-img" style="background:linear-gradient(160deg,#2d2d2d,#555);justify-content:flex-end"><div style="background:rgba(255,255,255,.1);flex:1;border-radius:4px;margin-bottom:4px"></div><div style="height:14px;background:rgba(242,96,58,.8);border-radius:3px"></div></div><div class="modelo-tag">Dark</div></div>
+              </div>
+            </div>
+
+            <!-- Cores -->
+            <div class="content-card">
+              <div class="content-card-title">Cores</div>
+              <div class="colors-grid">
+                <div class="color-row"><div class="color-row-label">Nome do produto</div><div class="color-pick" onclick="document.getElementById('cor-nome').click()"><input type="color" id="cor-nome" value="#404040" oninput="updateColorVal(this,'cor-nome-val');updateStoryPreview()"><span class="color-pick-val" id="cor-nome-val">#404040</span></div></div>
+                <div class="color-row"><div class="color-row-label">Preço de</div><div class="color-pick" onclick="document.getElementById('cor-preco-de').click()"><input type="color" id="cor-preco-de" value="#404040" oninput="updateColorVal(this,'cor-preco-de-val');updateStoryPreview()"><span class="color-pick-val" id="cor-preco-de-val">#404040</span></div></div>
+                <div class="color-row"><div class="color-row-label">Preço por</div><div class="color-pick" onclick="document.getElementById('cor-preco-por').click()"><input type="color" id="cor-preco-por" value="#fffe95" oninput="updateColorVal(this,'cor-preco-por-val');updateStoryPreview()"><span class="color-pick-val" id="cor-preco-por-val">#fffe95</span></div></div>
+                <div class="color-row"><div class="color-row-label">Fundo do preço por</div><div class="color-pick" onclick="document.getElementById('cor-fundo-preco').click()"><input type="color" id="cor-fundo-preco" value="#000000" oninput="updateColorVal(this,'cor-fundo-preco-val');updateStoryPreview()"><span class="color-pick-val" id="cor-fundo-preco-val">#000000</span></div></div>
+                <div class="color-row"><div class="color-row-label">Parcelamento</div><div class="color-pick" onclick="document.getElementById('cor-parc').click()"><input type="color" id="cor-parc" value="#404040" oninput="updateColorVal(this,'cor-parc-val');updateStoryPreview()"><span class="color-pick-val" id="cor-parc-val">#404040</span></div></div>
+              </div>
+            </div>
+
+            <!-- Imagem de Fundo -->
+            <div class="content-card">
+              <div class="content-card-title">Imagem de Fundo</div>
+              <div class="upload-area">
+                <input type="file" accept=".jpeg,.jpg,.png,.svg" onchange="handleStoryUpload(this)">
+                <span class="upload-icon">🖼️</span>
+                <div class="upload-hint"><strong>Clique para adicionar</strong> um modelo customizado<br>ou arraste o arquivo aqui</div>
+                <div style="margin-top:.75rem;font-size:.72rem;color:var(--tx3);transition:color .35s">Dimensão padrão <strong style="color:var(--tx2)">1080 × 1920</strong> · .jpeg .jpg .png .svg · máx. 3.1 MB</div>
+              </div>
+            </div>
+
+          </div><!-- /page-split-main -->
+
+          <!-- Preview -->
+          <div class="preview-sticky">
+            <div class="preview-panel">
+              <div class="preview-panel-header">Pré-visualização</div>
+              <div class="preview-panel-body">
+                <div class="story-preview" id="story-preview">
+                  <div class="sp-bg" id="sp-bg" style="background:linear-gradient(160deg,#ff6b35,#ee4d2d)"></div>
+                  <div class="sp-top"><div class="sp-logo">S</div><span class="sp-brand" style="color:#fff">Shopee</span></div>
+                  <div class="sp-img"></div>
+                  <div class="sp-info">
+                    <div class="sp-pname" id="sp-pname" style="color:#404040">Nome do Produto Exemplo</div>
+                    <div class="sp-pde" id="sp-pde" style="color:#404040">De: R$ 89,90</div>
+                    <div class="sp-ppor-wrap" id="sp-ppor-wrap" style="background:#000000"><span class="sp-ppor" id="sp-ppor" style="color:#fffe95">R$ 49,90 no Pix</span></div>
+                    <div class="sp-parc" id="sp-parc" style="color:#404040">10x de R$ 4,99 sem juros</div>
+                  </div>
+                  <div class="sp-link">Link: mimesepromos.com/xyz</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /page-split -->
+      </div>
+
+      <!-- ═══ TEXTO DE DISPARO ═══ -->
+      <div class="dash-page" id="dp-disparo">
+        <div class="dp-header">
+          <div><div class="dp-title">Texto de Disparo</div><div class="dp-sub">Configure o modelo de mensagem enviado com cada oferta</div></div>
+        </div>
+        <div class="page-split">
+          <div class="page-split-main">
+
+            <!-- Modelo Geral -->
+            <div class="content-card">
+              <div class="content-card-title" style="justify-content:space-between;align-items:flex-start">
+                <div>Modelo geral <span class="content-card-sub">Válido para todas as lojas</span></div>
+                <button class="modelos-prontos-btn" onclick="showModelosProntos()">✨ Escolher Modelo Pronto</button>
+              </div>
+              <textarea class="template-area" id="disparo-template" placeholder="Digite seu template de mensagem..." oninput="updateDisparoPreview()"></textarea>
+
+              <!-- Variáveis -->
+              <div style="margin-top:1.1rem">
+                <div style="font-size:.75rem;font-weight:700;color:var(--tx2);margin-bottom:.6rem;transition:color .35s">Variáveis disponíveis</div>
+                <div class="vars-grid">
+                  <span class="var-chip opt" onclick="insertVar('{{gatilho_de_venda}}')">{{gatilho_de_venda}} <span class="var-chip-copy">📋</span></span>
+                  <span class="var-chip req" onclick="insertVar('{{titulo}}')">{{titulo}} <span class="var-chip-copy">📋</span></span>
+                  <span class="var-chip opt" onclick="insertVar('{{preco_de}}')">{{preco_de}} <span class="var-chip-copy">📋</span></span>
+                  <span class="var-chip req" onclick="insertVar('{{preco_por}}')">{{preco_por}} <span class="var-chip-copy">📋</span></span>
+                  <span class="var-chip opt" onclick="insertVar('{{parcelamento}}')">{{parcelamento}} <span class="var-chip-copy">📋</span></span>
+                  <span class="var-chip opt" onclick="insertVar('{{recorrencia}}')">{{recorrencia}} <span class="var-chip-copy">📋</span></span>
+                  <span class="var-chip opt" onclick="insertVar('{{frete}}')">{{frete}} <span class="var-chip-copy">📋</span></span>
+                  <span class="var-chip opt" onclick="insertVar('{{cupom}}')">{{cupom}} <span class="var-chip-copy">📋</span></span>
+                  <span class="var-chip opt" onclick="insertVar('{{informacao_extra}}')">{{informacao_extra}} <span class="var-chip-copy">📋</span></span>
+                  <span class="var-chip req" onclick="insertVar('{{link_comissionado}}')">{{link_comissionado}} <span class="var-chip-copy">📋</span></span>
+                  <span class="var-chip opt" onclick="insertVar('{{loja}}')">{{loja}} <span class="var-chip-copy">📋</span></span>
+                  <span class="var-chip opt" onclick="insertVar('{{link_site_promos_pagina_inicial}}')">{{link_site_promos_pagina_inicial}} <span class="var-chip-copy">📋</span></span>
+                  <span class="var-chip opt" onclick="insertVar('{{link_comissionado_2}}')">{{link_comissionado_2}} <span class="var-chip-copy">📋</span></span>
+                </div>
+                <div class="vars-legend">
+                  <span style="font-size:.72rem;color:var(--tx3);transition:color .35s">Legenda:</span>
+                  <span class="legend-item"><span class="legend-dot" style="background:var(--tx3)"></span><span style="font-size:.72rem;color:var(--tx3);transition:color .35s">Opcional</span></span>
+                  <span class="legend-item"><span class="legend-dot" style="background:var(--coral)"></span><span style="font-size:.72rem;color:var(--tx3);transition:color .35s">Obrigatório</span></span>
+                  <span class="legend-item"><span class="legend-dot" style="background:#15803d"></span><span style="font-size:.72rem;color:var(--tx3);transition:color .35s">Configurado</span></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dicionário de Formatação -->
+            <div class="content-card">
+              <div class="content-card-title">Dicionário de formatação</div>
+              <div class="dict-split">
+                <div>
+                  <div class="dict-col-title">Telegram</div>
+                  <div class="dict-item"><div class="dict-item-label">Negrito:</div><div class="dict-codes"><span class="dict-code">&lt;b&gt;texto&lt;/b&gt;</span><span class="dict-code">&lt;strong&gt;texto&lt;/strong&gt;</span><span class="dict-code">**texto**</span></div></div>
+                  <div class="dict-item"><div class="dict-item-label" style="font-style:italic">Itálico:</div><div class="dict-codes"><span class="dict-code">&lt;i&gt;texto&lt;/i&gt;</span><span class="dict-code">&lt;em&gt;texto&lt;/em&gt;</span><span class="dict-code">*texto*</span></div></div>
+                  <div class="dict-item"><div class="dict-item-label" style="text-decoration:line-through">Rasurado:</div><div class="dict-codes"><span class="dict-code">&lt;s&gt;texto&lt;/s&gt;</span><span class="dict-code">&lt;strike&gt;texto&lt;/strike&gt;</span><span class="dict-code">--texto--</span></div></div>
+                  <div class="dict-item"><div class="dict-item-label" style="text-decoration:underline">Underline:</div><div class="dict-codes"><span class="dict-code">&lt;u&gt;texto&lt;/u&gt;</span></div></div>
+                </div>
+                <div>
+                  <div class="dict-col-title">WhatsApp</div>
+                  <div class="dict-item"><div class="dict-item-label">Negrito:</div><div class="dict-codes"><span class="dict-code">*texto*</span></div></div>
+                  <div class="dict-item"><div class="dict-item-label" style="font-style:italic">Itálico:</div><div class="dict-codes"><span class="dict-code">_texto_</span></div></div>
+                  <div class="dict-item"><div class="dict-item-label" style="text-decoration:line-through">Rasurado:</div><div class="dict-codes"><span class="dict-code">~texto~</span></div></div>
+                </div>
+              </div>
+              <div class="adv-toggle-row">
+                <div>
+                  <div class="adv-toggle-label">Modo avançado</div>
+                  <div class="adv-toggle-desc">Construa o texto de disparo livremente</div>
+                </div>
+                <label class="toggle-row" onclick="toggleFormToggle('disparo-adv')" style="margin-left:auto">
+                  <div class="form-toggle" id="disparo-adv" data-on="false"><div class="form-toggle-knob"></div></div>
+                </label>
+              </div>
+              <button class="btn-save" onclick="saveTextoDisparo()">💾 Salvar Modelo</button>
+            </div>
+
+            <!-- Config por loja -->
+            <div class="content-card">
+              <div class="content-card-title">Configuração de modelo por loja <span class="content-card-sub" style="color:var(--tx3)">(Opcional)</span></div>
+              <div class="empty-state" style="padding:2rem 1rem">
+                <span class="empty-icon">📝</span>
+                <div class="empty-title">Configure modelos específicos por loja</div>
+                <div class="empty-desc">Disponível nos planos Pro e Creators. Cada marketplace pode ter seu próprio texto de disparo personalizado.</div>
+                <button class="btn-outline-sm" onclick="showPage('home')">Ver planos →</button>
+              </div>
+            </div>
+
+          </div><!-- /page-split-main -->
+
+          <!-- Preview -->
+          <div class="preview-sticky">
+            <div class="preview-panel">
+              <div class="preview-panel-header">Pré-visualização</div>
+              <div class="preview-panel-body">
+                <div style="margin-bottom:.75rem;border-radius:8px;overflow:hidden;background:var(--bg2);border:1px solid var(--bdr);transition:background .35s,border-color .35s">
+                  <div style="height:80px;background:var(--bg3);transition:background .35s"></div>
+                </div>
+                <div class="dispatch-preview" id="disparo-preview">O preview do seu texto aparecerá aqui enquanto você edita...</div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /page-split -->
       </div>
 
       <!-- ═══ INSTAGRAM ═══ -->
