@@ -117,8 +117,9 @@ async function handleLogin() {
     okEl.className = 'alert alert-ok show';
     showToast('Bem-vindo de volta! 🎉', 'ok');
     setTimeout(() => {
-      showToast('Aqui você seria redirecionado ao painel. Configure seu dashboard!', 'ok');
-    }, 1800);
+      showPage('dashboard');
+      loadDashboard();
+    }, 800);
   }
 }
 
@@ -131,7 +132,7 @@ async function handleForgot() {
     showToast('Digite seu e-mail primeiro.', 'err'); return;
   }
   const { error } = await sb.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.href
+    redirectTo: 'https://mime-se.vercel.app'
   });
   if (error) { showToast('Erro: ' + error.message, 'err'); }
   else { showToast('📧 E-mail de recuperação enviado!', 'ok'); }
@@ -198,15 +199,15 @@ document.head.appendChild(style);
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
-    const nav = document.querySelector('.nav-end');
-    nav.innerHTML = `
-      <span style="font-size:.82rem;color:var(--tx2)">${session.user.email}</span>
-      <button class="btn btn-outline" style="padding:.45rem 1.1rem;font-size:.82rem" onclick="handleLogout()">Sair</button>
-      <button class="toggle" id="toggle" title="Alternar tema"></button>`;
-    document.getElementById('toggle')?.addEventListener('click', () => {
-      html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
-    });
+    // Usuário logado: vai direto pro dashboard
+    showPage('dashboard');
+    loadDashboard();
   }
+
+  // Toggle de tema do dashboard
+  document.getElementById('dash-toggle')?.addEventListener('click', () => {
+    html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+  });
 })();
 
 async function handleLogout() {

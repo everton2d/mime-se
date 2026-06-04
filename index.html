@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/dashboard.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -377,9 +378,103 @@
   </div>
 </div>
 
+<!-- ═══════ PAGE: DASHBOARD ═══════ -->
+<div class="page" id="page-dashboard">
+  <div class="dash-layout">
+    <!-- Sidebar -->
+    <aside class="dash-sidebar">
+      <div class="dash-logo">Mime-se ✦</div>
+      <div class="dash-user">
+        <div class="dash-user-name" id="dash-user-name">Carregando...</div>
+        <span class="dash-user-plan" id="dash-plan-badge">FREE</span>
+      </div>
+      <ul class="dash-nav">
+        <li><a class="active"><span class="nav-icon">📊</span>Painel</a></li>
+        <li><a><span class="nav-icon">🔗</span>Meus Links</a></li>
+        <li><a><span class="nav-icon">💬</span>Grupos WhatsApp</a></li>
+        <li><a><span class="nav-icon">📅</span>Agendamentos</a></li>
+        <li><a><span class="nav-icon">👥</span>Leads</a></li>
+        <li><a><span class="nav-icon">📸</span>Instagram</a></li>
+        <li><a><span class="nav-icon">⚙️</span>Configurações</a></li>
+      </ul>
+      <div class="dash-bottom">
+        <button class="dash-logout" onclick="handleLogout()">
+          <span>🚪</span> Sair da conta
+        </button>
+      </div>
+    </aside>
+
+    <!-- Conteúdo principal -->
+    <main class="dash-main">
+      <div class="dash-header">
+        <div>
+          <div class="dash-title" id="dash-welcome">Bem-vindo!</div>
+          <div class="dash-subtitle">Aqui está um resumo da sua operação de hoje</div>
+        </div>
+        <div class="dash-toggle-wrap">
+          <button class="toggle" id="dash-toggle" title="Alternar tema"></button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🔗</div>
+          <div class="stat-val" id="stat-links">0</div>
+          <div class="stat-label">Links gerados</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💬</div>
+          <div class="stat-val" id="stat-grupos">0</div>
+          <div class="stat-label">Grupos ativos</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📤</div>
+          <div class="stat-val" id="stat-disparos">0</div>
+          <div class="stat-label">Disparos enviados</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-val" id="stat-leads">0</div>
+          <div class="stat-label">Leads ativos</div>
+        </div>
+      </div>
+
+      <!-- Gerador rápido -->
+      <div class="quick-card">
+        <div class="dash-section-title">⚡ Gerar link de afiliado</div>
+        <div class="quick-form">
+          <input class="quick-input" id="quick-url" type="url" placeholder="Cole o link do produto (Shopee, Amazon, Magalu, Mercado Livre...)">
+          <button class="quick-btn" id="quick-btn" onclick="gerarLink()">⚡ Gerar Link</button>
+        </div>
+        <div class="quick-result" id="quick-result"></div>
+      </div>
+
+      <!-- Links recentes -->
+      <div class="quick-card">
+        <div class="dash-section-title">🕐 Links recentes</div>
+        <table class="links-table">
+          <thead>
+            <tr>
+              <th>Plataforma</th>
+              <th>Produto</th>
+              <th>Preço</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody id="links-tbody">
+            <tr><td colspan="4"><div class="empty-state"><div class="empty-icon">🔗</div><div>Carregando...</div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script src="js/main.js"></script>
+<script src="js/dashboard.js"></script>
 </body>
 </html>
