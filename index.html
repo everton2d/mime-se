@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark" data-page="home">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mime-se Divulgadora — Automação de Afiliados</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="mesh"></div>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <div class="logo">Mime-se ✦</div>
+  <div class="nav-links" id="nav-home-links">
+    <a href="#como-funciona">Como funciona</a>
+    <a href="#arsenal">Arsenal</a>
+    <a href="#precos">Planos</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <div class="nav-end">
+    <button class="btn btn-outline" style="padding:.45rem 1.1rem;font-size:.82rem" onclick="showPage('login')">Entrar</button>
+    <button class="btn btn-primary" style="padding:.45rem 1.1rem;font-size:.82rem" onclick="showPage('register')">Começar grátis</button>
+    <button class="toggle" id="toggle" title="Alternar tema"></button>
+  </div>
+</nav>
+
+<!-- ═══════ PAGE: HOME ═══════ -->
+<div class="page active" id="page-home">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow" style="margin-bottom:1.4rem"><span class="dot"></span>Automação de Afiliados com IA</div>
+      <h1 class="sec-title">Divulgue produtos,<br><span class="grad-text">ganhe comissões</span><br>no automático</h1>
+      <p class="sec-sub" style="margin-bottom:2.2rem">Cole o link. A IA gera seu link de afiliado, monta o post com imagem e preço, e dispara nos seus grupos — tudo em menos de 60 segundos.</p>
+      <div style="display:flex;gap:.9rem;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="showPage('register')">Começar grátis agora →</button>
+        <a href="#como-funciona" class="btn btn-outline">Ver como funciona</a>
+      </div>
+      <div class="hero-kpi">
+        <div class="kpi"><div class="kpi-n">+1560</div><div class="kpi-l">Afiliados ativos</div></div>
+        <div class="kpi-sep"></div>
+        <div class="kpi"><div class="kpi-n">180%</div><div class="kpi-l">Mais conversões</div></div>
+        <div class="kpi-sep"></div>
+        <div class="kpi"><div class="kpi-n">24/7</div><div class="kpi-l">Monitoramento</div></div>
+        <div class="kpi-sep"></div>
+        <div class="kpi"><div class="kpi-n">5+</div><div class="kpi-l">Marketplaces</div></div>
+      </div>
+    </div>
+    <div style="position:relative;display:flex;align-items:center;justify-content:center" id="hero-visual">
+      <div class="fl-badge fl-1">🔥 Link gerado em 3s</div>
+      <div class="hero-phone">
+        <div class="phone-bar">
+          <div class="ph-av">M</div>
+          <div><div class="ph-name">Mime-se Promos</div><div class="ph-st">● IA ativa</div></div>
+        </div>
+        <div class="ph-msg">
+          <div class="ph-badge">🛍️ ACHADO DO DIA</div>
+          <div style="font-size:.78rem;font-weight:700;margin-bottom:.35rem">Organizador de Gaveta Modular</div>
+          <div class="ph-prod">
+            <div class="ph-price">R$ 49,90</div>
+            <div class="ph-orig">De R$ 89,90 — 44% OFF</div>
+            <span class="ph-lnk">→ ml.mimesepromos.com/xyz123</span>
+          </div>
+          <div class="ph-ts">Gerado por IA Mime-se • agora</div>
+        </div>
+        <div class="typing"><span></span><span></span><span></span></div>
+      </div>
+      <div class="fl-badge fl-2">💰 +R$127 hoje</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- MARKETPLACES -->
+<section class="mkt-sec">
+  <div class="container">
+    <p class="mkt-label">Marketplaces integrados automaticamente</p>
+    <div class="mkt-track">
+      <div class="mkt-inner">
+        <div class="mkt-pill"><span>🛍️</span>Shopee</div>
+        <div class="mkt-pill"><span>📦</span>Amazon</div>
+        <div class="mkt-pill"><span>🏪</span>Magalu</div>
+        <div class="mkt-pill"><span>🟡</span>Mercado Livre</div>
+        <div class="mkt-pill"><span>🌿</span>Natura</div>
+        <div class="mkt-pill"><span>👗</span>Shein</div>
+        <div class="mkt-pill"><span>💄</span>Avon</div>
+        <div class="mkt-pill"><span>🛍️</span>Shopee</div>
+        <div class="mkt-pill"><span>📦</span>Amazon</div>
+        <div class="mkt-pill"><span>🏪</span>Magalu</div>
+        <div class="mkt-pill"><span>🟡</span>Mercado Livre</div>
+        <div class="mkt-pill"><span>🌿</span>Natura</div>
+        <div class="mkt-pill"><span>👗</span>Shein</div>
+        <div class="mkt-pill"><span>💄</span>Avon</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROBLEM -->
+<section class="prob-sec fade-up">
+  <div class="container">
+    <div class="sec-head">
+      <div class="eyebrow" style="margin-bottom:1rem">O problema</div>
+      <h2 class="sec-title">Você está perdendo<br>dinheiro todo dia</h2>
+      <p class="sec-sub">Afiliados perdem até 70% das melhores ofertas por não conseguirem acompanhar todos os marketplaces 24h por dia.</p>
+    </div>
+    <div class="prob-grid">
+      <div class="card prob-card fade-up"><span class="prob-icon">😵‍💫</span><div class="prob-title">Monitoramento manual</div><div class="prob-desc">Horas perdidas pesquisando ofertas em diversos marketplaces sem encontrar as melhores oportunidades.</div></div>
+      <div class="card prob-card fade-up" style="transition-delay:.1s"><span class="prob-icon">⏰</span><div class="prob-title">Perda de tempo</div><div class="prob-desc">Criar links manualmente, formatar posts e disparar em grupos consome horas do seu dia produtivo.</div></div>
+      <div class="card prob-card fade-up" style="transition-delay:.2s"><span class="prob-icon">📉</span><div class="prob-title">Baixa conversão</div><div class="prob-desc">Sem divulgação constante e estratégica, suas comissões ficam muito abaixo do potencial real.</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- MODES -->
+<section class="modes-sec" id="como-funciona">
+  <div class="container">
+    <div class="sec-head fade-up">
+      <div class="eyebrow" style="margin-bottom:1rem">🔥 Sistema completo</div>
+      <h2 class="sec-title">Quatro formas de<br><span class="grad-text">automatizar suas vendas</span></h2>
+      <p class="sec-sub">Escolha o modo que mais se encaixa no seu jeito de trabalhar. Use todos ao mesmo tempo.</p>
+    </div>
+    <div class="mode-tabs fade-up">
+      <button class="mode-tab active" onclick="switchMode(0)">Monitoramento</button>
+      <button class="mode-tab" onclick="switchMode(1)">Clone</button>
+      <button class="mode-tab" onclick="switchMode(2)">Sob Demanda</button>
+      <button class="mode-tab" onclick="switchMode(3)">Agendamento</button>
+    </div>
+    <div class="mpanel active" id="mp0">
+      <div><ul class="mode-steps"><li class="ms"><div class="ms-num">1</div><div class="ms-txt">Monitora grupos de oferta 24h por dia</div></li><li class="ms"><div class="ms-num">2</div><div class="ms-txt">Detecta promoções automaticamente</div></li><li class="ms"><div class="ms-num">3</div><div class="ms-txt">Gera seu link de afiliado em segundos</div></li><li class="ms"><div class="ms-num">4</div><div class="ms-txt">Cria post com CTA feita por IA</div></li><li class="ms"><div class="ms-num">5</div><div class="ms-txt">Dispara automático nos seus grupos</div></li></ul></div>
+      <div><div class="mh"><div class="m-badge">🤖 Modo Monitoramento</div><div class="m-title">Espelhamento Inteligente 24h</div><div class="m-desc">Monitora grupos, identifica ofertas, gera seu link de afiliado, monta o post e dispara nos seus grupos sem nenhuma ação sua.</div><div class="m-tag">✅ 100% Hands-Free — Sua operação rodando no automático</div><div class="ms-grid"><div class="ms-stat"><div class="ms-sn">24/7</div><div class="ms-sl">Monitoramento ativo</div></div><div class="ms-stat"><div class="ms-sn">0s</div><div class="ms-sl">Intervenção necessária</div></div></div></div></div>
+    </div>
+    <div class="mpanel" id="mp1">
+      <div><ul class="mode-steps"><li class="ms"><div class="ms-num">1</div><div class="ms-txt">Monitora grupos 24h</div></li><li class="ms"><div class="ms-num">2</div><div class="ms-txt">Captura a mensagem original completa</div></li><li class="ms"><div class="ms-num">3</div><div class="ms-txt">Converte o link automaticamente</div></li><li class="ms"><div class="ms-num">4</div><div class="ms-txt">Gera link de cupom quando houver</div></li><li class="ms"><div class="ms-num">5</div><div class="ms-txt">Dispara sem reformatar nada</div></li></ul></div>
+      <div><div class="mh"><div class="m-badge">🔗 Modo Clone</div><div class="m-title">Clona, Converte e Preserva</div><div class="m-desc">Mantém a mensagem original intacta — texto, formatação e imagens. Troca só o link e gera cupom quando houver. Zero reformatação.</div><div class="m-tag">🎯 Aproveite CUPONS — Post original com seu link</div></div></div>
+    </div>
+    <div class="mpanel" id="mp2">
+      <div><ul class="mode-steps"><li class="ms"><div class="ms-num">1</div><div class="ms-txt">Cole o link do marketplace</div></li><li class="ms"><div class="ms-num">2</div><div class="ms-txt">IA reconhece e converte o link</div></li><li class="ms"><div class="ms-num">3</div><div class="ms-txt">Post pronto com imagem, preço e CTA</div></li><li class="ms"><div class="ms-num">4</div><div class="ms-txt">Escolha os grupos e dispare</div></li><li class="ms"><div class="ms-num">5</div><div class="ms-txt">Enviado na hora, com 1 clique</div></li></ul></div>
+      <div><div class="mh"><div class="m-badge">⚡ Modo Sob Demanda</div><div class="m-title">Criação Rápida 60s</div><div class="m-desc">Você escolhe a oferta. Cole o link, a IA converte pro seu link de afiliado e monta o post pronto em segundos.</div><div class="m-tag">⏱️ Menos de 60 segundos — Do link ao disparo</div><div class="ms-grid"><div class="ms-stat" style="grid-column:span 2"><div class="ms-sn" style="font-size:2.2rem">60s</div><div class="ms-sl" style="font-size:.78rem">Do link à publicação completa</div></div></div></div></div>
+    </div>
+    <div class="mpanel" id="mp3">
+      <div><ul class="mode-steps"><li class="ms"><div class="ms-num">1</div><div class="ms-txt">Programe envios automáticos</div></li><li class="ms"><div class="ms-num">2</div><div class="ms-txt">Defina horários e intervalos precisos</div></li><li class="ms"><div class="ms-num">3</div><div class="ms-txt">Organize por nicho ou loja</div></li><li class="ms"><div class="ms-num">4</div><div class="ms-txt">Personalize texto e ajuste a IA</div></li><li class="ms"><div class="ms-num">5</div><div class="ms-txt">Envio no timing ideal</div></li></ul></div>
+      <div><div class="mh"><div class="m-badge">📅 Modo Agendamento</div><div class="m-title">Fila de Envios Inteligente</div><div class="m-desc">Para escala e consistência. Organize ofertas em fila, defina horários e intervalos e o sistema publica no momento certo.</div><div class="m-tag">🧠 Agendamento Inteligente — Hora ideal para cada produto</div><div class="ms-grid"><div class="ms-stat"><div class="ms-sn">1–30</div><div class="ms-sl">Min. entre envios</div></div><div class="ms-stat"><div class="ms-sn">7d</div><div class="ms-sl">Programe a semana</div></div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ARSENAL -->
+<section class="arsenal-sec" id="arsenal">
+  <div class="container">
+    <div class="sec-head fade-up" style="text-align:center">
+      <div class="eyebrow" style="margin:0 auto 1rem">Arsenal completo</div>
+      <h2 class="sec-title">Enquanto você dorme,<br><span class="grad-text">a IA trabalha por você</span></h2>
+      <p class="sec-sub" style="margin:0 auto">Cada recurso foi desenvolvido para maximizar suas conversões e eliminar trabalho manual.</p>
+    </div>
+    <div class="arsenal-grid">
+      <div class="card ac fade-up"><div class="badge-hot">MAIS USADO</div><div class="ac-icon" style="background:rgba(242,96,58,.12)">🔗</div><div class="ac-title">Geração Instantânea de Links</div><div class="ac-desc">Cole qualquer link de Shopee, Amazon, Magalu, Natura ou Mercado Livre. Em menos de 60 segundos, seu link de afiliado está pronto para faturar.</div><span class="ac-tag tag-or">✓ 5 Marketplaces Integrados</span></div>
+      <div class="card ac fade-up" style="transition-delay:.06s"><div class="ac-icon" style="background:rgba(37,211,102,.12)">💬</div><div class="ac-title">Disparo em Massa no WhatsApp</div><div class="ac-desc">Envie ofertas para múltiplos grupos simultaneamente. Um clique dispara para todos. Seus concorrentes ainda copiam e colam manualmente.</div><span class="ac-tag tag-gr">✓ Disparos Automáticos</span></div>
+      <div class="card ac fade-up" style="transition-delay:.12s"><div class="ac-icon" style="background:rgba(245,145,58,.12)">🔄</div><div class="ac-title">Espelhamento Inteligente 24h</div><div class="ac-desc">Monitore grupos de ofertas enquanto dorme. A IA detecta promoções, gera seu link e dispara automaticamente nos seus grupos. Zero esforço.</div><span class="ac-tag tag-or">✓ Funciona 24/7 Sem Parar</span></div>
+      <div class="card ac fade-up" style="transition-delay:.04s"><div class="badge-new">NOVO</div><div class="ac-icon" style="background:rgba(242,96,58,.12)">🛒</div><div class="ac-title">Mercado Livre Automático</div><div class="ac-desc">Monitore grupos de ofertas de terceiros no WhatsApp. Quando aparecer uma oferta do Mercado Livre, a IA converte para seu link e dispara automaticamente.</div><span class="ac-tag tag-or">✓ Monitora Grupos de Achadinhos</span></div>
+      <div class="card ac fade-up" style="transition-delay:.1s"><div class="badge-exc">EXCLUSIVO</div><div class="ac-icon" style="background:rgba(124,58,237,.12)">📋</div><div class="ac-title">Sistema de Filas Inteligente</div><div class="ac-desc">O sistema organiza seus disparos em filas sequenciais com intervalos estratégicos, garantindo entrega máxima e protegendo seu número.</div><span class="ac-tag tag-pu">✓ Filas Compartilhadas</span></div>
+      <div class="card ac fade-up" style="transition-delay:.16s"><div class="ac-icon" style="background:rgba(59,130,246,.12)">📅</div><div class="ac-title">Agendamento de Publicações</div><div class="ac-desc">Programe ofertas para os horários de pico de engajamento. Prepare sua semana inteira em minutos e deixe a IA publicar no momento certo para mais cliques.</div><span class="ac-tag tag-bl">✓ Horários Otimizados</span></div>
+      <div class="card ac fade-up"><div class="ac-icon" style="background:rgba(236,72,153,.12)">📸</div><div class="ac-title">Conteúdo Pronto p/ Instagram</div><div class="ac-desc">Posts e stories profissionais gerados automaticamente. Imagens + texto + hashtags otimizados para engajamento. Construa autoridade sem gastar horas no Canva.</div><span class="ac-tag tag-or">✓ Templates Profissionais</span></div>
+      <div class="card ac fade-up" style="transition-delay:.06s"><div class="ac-icon" style="background:rgba(16,185,129,.12)">🎯</div><div class="ac-title">Segmentação por Nicho</div><div class="ac-desc">Beleza para grupo de beleza. Eletrônicos para grupo de tech. Ofertas certas para pessoas certas = taxa de conversão até 3x maior. Seus grupos vão agradecer.</div><span class="ac-tag tag-gr">✓ +180% de Relevância</span></div>
+      <div class="card ac fade-up" style="transition-delay:.12s"><div class="ac-icon" style="background:rgba(245,158,11,.12)">🤖</div><div class="ac-title">CTAs Persuasivos com IA</div><div class="ac-desc">Cada produto recebe uma chamada única, escrita por IA treinada em milhares de posts de alta conversão. Textos que vendem, não que informam.</div><span class="ac-tag tag-or">✓ Copy que Converte</span></div>
+      <div class="card ac fade-up"><div class="badge-new">NOVO</div><div class="ac-icon" style="background:rgba(14,165,233,.12)">🔗</div><div class="ac-title">Modo Clone</div><div class="ac-desc">A mensagem chega idêntica ao original, só com seu link de afiliado. Converte links de todos os marketplaces. Na Shopee: cupons, sacola, carrinho e Link Prime.</div><span class="ac-tag tag-bl">✓ Zero Reformatação</span></div>
+      <div class="card ac fade-up" style="transition-delay:.06s"><div class="badge-new">NOVO</div><div class="ac-icon" style="background:rgba(37,211,102,.12)">📱</div><div class="ac-title">Multiconexão</div><div class="ac-desc">Use vários números de WhatsApp na mesma conta. Cada um com grupos, filas e configurações independentes. Distribua envios e reduza risco de bloqueio.</div><span class="ac-tag tag-gr">✓ Escala Sem Limite</span></div>
+      <div class="card ac fade-up" style="transition-delay:.12s"><div class="badge-new">NOVO</div><div class="ac-icon" style="background:rgba(245,145,58,.12)">⚡</div><div class="ac-title">Fura Fila</div><div class="ac-desc">As ofertas mais novas têm prioridade automática no envio. O que é urgente sai primeiro, sem ficar preso atrás de ofertas antigas. Flash sales não perdem timing.</div><span class="ac-tag tag-or">✓ Prioridade Inteligente</span></div>
+      <div class="card ac fade-up"><div class="badge-new">NOVO</div><div class="ac-icon" style="background:rgba(236,72,153,.12)">📢</div><div class="ac-title">Marcar Todos</div><div class="ac-desc">Mencione todos os membros do grupo de uma vez. Ninguém perde a oferta. Use em cupons exclusivos e flash sales para visibilidade máxima.</div><span class="ac-tag tag-or">✓ Visibilidade Máxima</span></div>
+      <div class="card ac fade-up" style="transition-delay:.06s"><div class="badge-new">NOVO</div><div class="ac-icon" style="background:rgba(99,102,241,.12)">🖼️</div><div class="ac-title">Link Preview</div><div class="ac-desc">Ofertas com pré-visualização clicável: imagem, título e preço. Inclua CTA e preço de/por no preview. Post profissional que gera mais cliques.</div><span class="ac-tag tag-pu">✓ Post Profissional</span></div>
+      <div class="card ac fade-up" style="transition-delay:.12s"><div class="badge-new">NOVO</div><div class="ac-icon" style="background:rgba(59,130,246,.12)">📊</div><div class="ac-title">SubID por Marketplace</div><div class="ac-desc">Saiba qual grupo vende mais. Shopee até 3 SubIDs, Amazon tag própria, MeLi etiqueta. Descubra o que funciona e dobre a aposta.</div><span class="ac-tag tag-bl">✓ Rastreamento Completo</span></div>
+      <div class="card ac fade-up"><div class="badge-new">NOVO</div><div class="ac-icon" style="background:rgba(34,197,94,.12)">👥</div><div class="ac-title">Gestão de Leads</div><div class="ac-desc">Dashboard completo: leads únicos, CPL, retenção, superfãs, entradas/saídas em tempo real, raio-X por grupo. Decisões com dados reais.</div><span class="ac-tag tag-gr">✓ Decisões com Dados</span></div>
+      <div class="card ac fade-up" style="transition-delay:.06s"><div class="badge-new">NOVO</div><div class="ac-icon" style="background:rgba(245,158,11,.12)">⏱️</div><div class="ac-title">Intervalos Personalizados</div><div class="ac-desc">De 1 a 30 minutos entre envios. Horário de início/término. Limpeza automática de pendentes. Comportamento humano, escala de máquina.</div><span class="ac-tag tag-or">✓ Anti-Ban</span></div>
+      <div class="card ac fade-up" style="transition-delay:.12s"><div class="badge-new">NOVO</div><div class="ac-icon" style="background:rgba(14,165,233,.12)">🕐</div><div class="ac-title">Horário de Funcionamento</div><div class="ac-desc">Defina quando sua loja opera. Fora do horário, para de receber links. Filas e agendamentos continuam. Sem bagunça de madrugada.</div><span class="ac-tag tag-bl">✓ Respeite Seu Público</span></div>
+      <div class="card ac fade-up"><div class="badge-new">NOVO</div><div class="ac-icon" style="background:rgba(236,72,153,.12)">🏪</div><div class="ac-title">Vitrine — Landpage</div><div class="ac-desc">Tenha sua própria landing page personalizada com vitrine de produtos. Reúna suas ofertas em um link só e venda direto para seu público.</div><span class="ac-tag tag-or">✓ Link Único de Vendas</span></div>
+      <div class="card ac fade-up" style="transition-delay:.06s"><div class="badge-new">NOVO</div><div class="ac-icon" style="background:rgba(124,58,237,.12)">💬</div><div class="ac-title">Instagram Responde</div><div class="ac-desc">A IA responde comentários e stories automaticamente no Instagram. Você personaliza quais comentários responder e nunca perde uma venda.</div><span class="ac-tag tag-pu">✓ Personalize as Respostas</span></div>
+      <div class="card ac fade-up" style="transition-delay:.12s"><div class="badge-new">NOVO</div><div class="ac-icon" style="background:rgba(99,102,241,.12)">📅</div><div class="ac-title">Agendamento para Instagram</div><div class="ac-desc">Agende suas postagens para o Instagram em carrossel, reels, story e feed. Programe tudo de uma vez e mantenha seu perfil sempre ativo.</div><span class="ac-tag tag-pu">✓ Carrossel, Reels, Story e Feed</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRICING -->
+<section class="price-sec" id="precos">
+  <div class="container">
+    <div class="sec-head fade-up" style="text-align:center">
+      <div class="eyebrow" style="margin:0 auto 1rem">Planos e preços</div>
+      <h2 class="sec-title">Planos de Automação para<br><span class="grad-text">Todos os Perfis de Afiliados</span></h2>
+      <p class="sec-sub" style="margin:0 auto">Escolha o plano ideal para escalar suas vendas. Sem fidelidade. Garantia de 7 dias.</p>
+    </div>
+    <div class="price-toggle">
+      <span>Mensal</span>
+      <div class="ptog" id="ptog" onclick="toggleAnual()"></div>
+      <span>Anual <span class="anual-badge">Economize até 20%</span></span>
+    </div>
+    <div class="price-grid">
+      <div class="card pc fade-up"><div class="pc-plan">Pra quem tá começando</div><div class="pc-name">Afiliado Iniciante</div><div class="pc-desc">Comece a divulgar sem limite.</div><div class="pc-price"><span class="pc-cur">R$</span><span class="pc-val" id="p1">69</span><span class="pc-per" id="p1d">,90/mês</span></div><ul class="pc-feats"><li>Gerador de ofertas sem limite</li><li>Links de afiliado automáticos</li><li>Imagens para Instagram</li><li>Vitrine personalizada</li><li>Promoções no WhatsApp</li></ul><button class="btn-plan bps" onclick="showPage('register')">Começar grátis</button><button class="btn-plan bpp" style="margin-top:.6rem" onclick="showPage('register')">Assinar</button></div>
+      <div class="card pc fade-up" style="transition-delay:.1s"><div class="pc-plan">Pra quem tá crescendo</div><div class="pc-name">Afiliado Pro</div><div class="pc-desc">Automatize seus grupos.</div><div class="pc-price"><span class="pc-cur">R$</span><span class="pc-val" id="p2">99</span><span class="pc-per" id="p2d">/mês</span></div><ul class="pc-feats"><li>Disparo para 3 grupos</li><li>Gestão de Leads</li><li>Monitoramento 24h</li><li>Modo Clone + Link Preview</li><li>Filas e agendamento</li><li>Fura Fila + Marcar Todos</li><li>SubID por marketplace</li><li>Instagram Responde</li></ul><button class="btn-plan bpp" onclick="showPage('register')">Assinar</button></div>
+      <div class="card pc featured fade-up" style="transition-delay:.2s"><div class="pc-badge">Mais escolhido</div><div class="pc-plan">Pra quem tá escalando</div><div class="pc-name">Creators</div><div class="pc-desc">Recursos para operar em escala.</div><div class="pc-price"><span class="pc-cur">R$</span><span class="pc-val" id="p3">179</span><span class="pc-per" id="p3d">,90/mês</span></div><ul class="pc-feats"><li>Disparo para 10 grupos</li><li>Gestão de Leads completa</li><li>Monitoramento 24h</li><li>Modo Clone + Link Preview</li><li>Filas e agendamento</li><li>Fura Fila + Marcar Todos</li><li>Segmentação por nicho</li><li>SubID por marketplace</li><li>Instagram Responde</li><li>Conexão extra por R$29,90</li></ul><button class="btn-plan bpp" onclick="showPage('register')">Assinar agora</button></div>
+      <div class="card pc fade-up" style="transition-delay:.3s"><div class="pc-plan">Pra creators e times</div><div class="pc-name">Empresarial</div><div class="pc-desc">Estrutura para alto volume.</div><div class="pc-price"><span class="pc-cur" style="font-size:.72rem;color:var(--tx3)">a partir de R$</span><span class="pc-val" id="p4">300</span><span class="pc-per" id="p4d">/mês</span></div><ul class="pc-feats"><li>Disparo para 25 a 300 grupos</li><li>2+ números conectados</li><li>Infra dedicada</li><li>Consultoria de setup</li><li>Conexão extra por R$29,90</li></ul><button class="btn-plan bps" onclick="showPage('register')">Falar com consultor</button><button class="btn-plan bpp" style="margin-top:.6rem" onclick="showPage('register')">Assinar</button></div>
+    </div>
+    <p style="text-align:center;margin-top:1.75rem;font-size:.82rem;color:var(--tx3)">🛡️ Garantia de 7 dias — Se não ficar satisfeito, devolvemos 100% do seu dinheiro.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TESTIMONIALS -->
+<section class="testi-sec fade-up">
+  <div class="container">
+    <div class="sec-head" style="text-align:center">
+      <div class="eyebrow" style="margin:0 auto 1rem">Depoimentos</div>
+      <h2 class="sec-title">Afiliados que já<br>automatizaram suas vendas</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="card tc fade-up"><div class="tc-stars">★★★★★</div><p class="tc-text">"Uma ferramenta que veio para ajudar o afiliado iniciante e até os grandes players. Eu sempre indico para amigos — um ponto excelente: o suporte, muito rápido! Indico de olho fechado."</p><div class="tc-auth"><div class="tc-av">M</div><div><div class="tc-name">Mario</div><div class="tc-hdl">@achadinhosdonetao</div></div></div></div>
+      <div class="card tc fade-up" style="transition-delay:.1s"><div class="tc-stars">★★★★★</div><p class="tc-text">"Hoje eu só colo o link e a IA faz tudo: monta o post, coloca imagem, preço, meu link com ID, e dispara para os grupos. Aumentou muito minhas vendas. O suporte é sensacional."</p><div class="tc-auth"><div class="tc-av">A</div><div><div class="tc-name">Alysson</div><div class="tc-hdl">@top0fertaseonline</div></div></div></div>
+      <div class="card tc fade-up" style="transition-delay:.2s"><div class="tc-stars">★★★★★</div><p class="tc-text">"Automatizei os disparos e hoje administro 15 grupos simultaneamente, sem copiar e colar. A CTA IA gera a chamada certa para cada produto e aumenta minhas conversões consistentemente."</p><div class="tc-auth"><div class="tc-av">J</div><div><div class="tc-name">Juliana Costa</div><div class="tc-hdl">Consultora Natura & Magalu</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FAQ -->
+<section class="faq-sec" id="faq">
+  <div class="container">
+    <div class="sec-head fade-up" style="text-align:center">
+      <div class="eyebrow" style="margin:0 auto 1rem">Dúvidas frequentes</div>
+      <h2 class="sec-title">Perguntas sobre<br>automação de afiliados</h2>
+    </div>
+    <div class="faq-grid">
+      <div class="fq" onclick="toggleFaq(this)"><div class="fq-q">Como funciona a geração automática de links?<div class="fq-ico">+</div></div><div class="fq-a">A IA identifica o link do produto de qualquer marketplace e automaticamente gera seu link de afiliado comissionado em segundos. Não precisa entrar em cada site separadamente.</div></div>
+      <div class="fq" onclick="toggleFaq(this)"><div class="fq-q">O que é o espelhamento inteligente?<div class="fq-ico">+</div></div><div class="fq-a">É o recurso mais poderoso! A IA monitora 24h os grupos de ofertas que você escolher. Quando surge uma promoção, o sistema gera seu link, cria um post otimizado e dispara nos seus grupos automaticamente.</div></div>
+      <div class="fq" onclick="toggleFaq(this)"><div class="fq-q">Posso testar grátis sem cartão?<div class="fq-ico">+</div></div><div class="fq-a">Sim! Nosso plano Free é 100% gratuito para sempre, sem necessidade de cartão de crédito. Você já começa gerando links automáticos e criando posts profissionais.</div></div>
+      <div class="fq" onclick="toggleFaq(this)"><div class="fq-q">Meu número pode ser banido?<div class="fq-ico">+</div></div><div class="fq-a">A plataforma minimiza o risco com várias proteções: intervalos de 1 a 30 minutos entre envios (simula comportamento humano), horário de funcionamento configurável e Multiconexão para distribuir envios entre vários números.</div></div>
+      <div class="fq" onclick="toggleFaq(this)"><div class="fq-q">Quantos grupos posso gerenciar?<div class="fq-ico">+</div></div><div class="fq-a">Depende do plano: Pro permite 3 grupos, Creators até 10 grupos, e Empresarial de 25 a 300 grupos simultâneos. Você pode segmentar por nicho e enviar ofertas específicas para cada grupo.</div></div>
+      <div class="fq" onclick="toggleFaq(this)"><div class="fq-q">O que é o Modo Clone?<div class="fq-ico">+</div></div><div class="fq-a">O Modo Clone envia a mensagem nos seus grupos exatamente como veio do grupo monitorado — mesmo formato, imagem e layout. Links de todos os marketplaces são convertidos automaticamente pro seu link de afiliado.</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA -->
+<section class="cta-sec" id="comecar">
+  <div class="container" style="position:relative;z-index:1">
+    <div class="fade-up">
+      <div class="eyebrow" style="margin:0 auto 1.5rem;width:fit-content">Comece agora</div>
+      <h2 class="sec-title">Comece a Vender Mais<br>Hoje Mesmo</h2>
+      <p class="sec-sub" style="margin:0 auto 2rem">Crie sua conta gratuita em menos de 1 minuto e tenha acesso imediato a todos os recursos essenciais.</p>
+      <div style="display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-primary" style="font-size:1rem;padding:.95rem 2.25rem" onclick="showPage('register')">Criar conta grátis →</button>
+        <a href="https://wa.me/5527997362780" class="btn btn-outline" style="font-size:1rem;padding:.95rem 2rem">💬 Falar no WhatsApp</a>
+      </div>
+      <div class="cta-checks">
+        <div class="cta-ck">Sem cartão de crédito</div>
+        <div class="cta-ck">Acesso imediato</div>
+        <div class="cta-ck">Suporte gratuito</div>
+        <div class="cta-ck">Garantia de 7 dias</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="f-logo">Mime-se ✦</div>
+  <div class="f-links"><a href="#">Termos de uso</a><a href="#">Privacidade</a><a href="#">Suporte</a><a href="https://wa.me/5527997362780">WhatsApp</a></div>
+  <div class="f-copy">© 2026 Mime-se Promos. Todos os direitos reservados.</div>
+</footer>
+</div><!-- end page-home -->
+
+<!-- ═══════ PAGE: REGISTER ═══════ -->
+<div class="page" id="page-register">
+  <div class="auth-page">
+    <div class="auth-split">
+      <div class="auth-left">
+        <div class="auth-left-logo">Mime-se ✦</div>
+        <div class="auth-left-body">
+          <h2 class="auth-left-title">Comece a Vender Mais Hoje Mesmo</h2>
+          <p class="auth-left-sub">Crie sua conta gratuita em menos de 1 minuto e tenha acesso imediato a todos os recursos essenciais da plataforma.</p>
+          <ul class="auth-left-checks">
+            <li>Acesso imediato à plataforma</li>
+            <li>Mensagens automáticas e personalizadas</li>
+            <li>Suporte gratuito incluído</li>
+            <li>Sem necessidade de cartão</li>
+          </ul>
+        </div>
+        <div class="auth-left-foot">Sem cartão de crédito • Acesso imediato • 100% gratuito</div>
+      </div>
+      <div class="auth-right">
+        <h1 class="auth-title">Criar Conta Grátis</h1>
+        <p class="auth-sub">Comece agora mesmo e tenha acesso imediato</p>
+        <div class="alert alert-err" id="reg-err"></div>
+        <div class="alert alert-ok" id="reg-ok"></div>
+        <div class="form-group">
+          <label class="form-label">Nome completo *</label>
+          <input class="form-input" id="reg-nome" type="text" placeholder="Seu nome completo" autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">E-mail *</label>
+          <input class="form-input" id="reg-email" type="email" placeholder="seu@email.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label">WhatsApp *</label>
+          <input class="form-input" id="reg-wpp" type="tel" placeholder="(27) 99999-9999" autocomplete="tel">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Senha *</label>
+          <input class="form-input" id="reg-pass" type="password" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+        </div>
+        <button class="btn-submit" id="reg-btn" onclick="handleRegister()">
+          <span>⚡</span> Começar
+        </button>
+        <p class="auth-terms">Ao clicar em <strong>Começar</strong>, você concorda com nossa <a href="#">Política de Privacidade</a> e com nossos <a href="#">Termos de Uso</a>.</p>
+        <p class="auth-alt">Já tem conta? <a onclick="showPage('login')">Entrar →</a></p>
+        <div class="auth-foot-links"><a href="#" onclick="showPage('home')">← Voltar ao site</a><a href="#">Suporte</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ PAGE: LOGIN ═══════ -->
+<div class="page" id="page-login">
+  <div class="auth-page">
+    <div class="auth-split">
+      <div class="auth-left">
+        <div class="auth-left-logo">Mime-se ✦</div>
+        <div class="auth-left-body">
+          <h2 class="auth-left-title">Bem-vindo de volta!</h2>
+          <p class="auth-left-sub">Acesse sua conta para continuar automatizando suas vendas e acompanhar seus resultados em tempo real.</p>
+          <ul class="auth-left-checks">
+            <li>Painel de métricas em tempo real</li>
+            <li>Gerador de links de afiliado</li>
+            <li>Disparo para grupos WhatsApp</li>
+            <li>Gestão de Leads completa</li>
+          </ul>
+        </div>
+        <div class="auth-left-foot">+1560 afiliados já automatizaram suas vendas</div>
+      </div>
+      <div class="auth-right">
+        <h1 class="auth-title">Entrar na sua conta</h1>
+        <p class="auth-sub">Acesse sua conta para continuar</p>
+        <div class="alert alert-err" id="login-err"></div>
+        <div class="alert alert-ok" id="login-ok"></div>
+        <div class="form-group">
+          <label class="form-label">E-mail</label>
+          <input class="form-input" id="login-email" type="email" placeholder="seu@email.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Senha</label>
+          <input class="form-input" id="login-pass" type="password" placeholder="Sua senha" autocomplete="current-password">
+          <a class="forgot-link" onclick="handleForgot()">Esqueceu a senha?</a>
+        </div>
+        <button class="btn-submit" id="login-btn" onclick="handleLogin()">
+          Entrar →
+        </button>
+        <p class="auth-alt">Não tem uma conta? <a onclick="showPage('register')">Cadastre-se</a></p>
+        <div class="auth-foot-links"><a href="#" onclick="showPage('home')">← Voltar ao site</a><a href="#">Suporte</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="js/main.js"></script>
+</body>
+</html>
