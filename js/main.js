@@ -251,3 +251,44 @@ async function handleLogout() {
   showToast('Até logo! 👋', 'ok');
   location.reload();
 }
+
+// ══════════════════════════════════════
+// AUTO LOGOUT — 30min de inatividade
+// ══════════════════════════════════════
+const INACTIVITY_MS = 30 * 60 * 1000; // 30 minutos
+const WARN_MS       = 29 * 60 * 1000; // aviso 1 min antes
+let inactivityTimer, warnTimer;
+
+async function autoLogout() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return; // só aplica se estiver logado
+  clearInactivityTimers();
+  showToast('⏱️ Sessão encerrada por inatividade.', 'err');
+  await sb.auth.signOut();
+  setTimeout(() => { showPage('home'); }, 1800);
+}
+
+function warnInactivity() {
+  const { data: { session } } = sb.auth.getSession().then(({ data }) => {
+    if (data.session) showToast('⚠️ Você será desconectado em 1 minuto por inatividade.', 'err');
+  });
+}
+
+function resetInactivityTimers() {
+  clearInactivityTimers();
+  warnTimer       = setTimeout(warnInactivity, WARN_MS);
+  inactivityTimer = setTimeout(autoLogout,    INACTIVITY_MS);
+}
+
+function clearInactivityTimers() {
+  clearTimeout(inactivityTimer);
+  clearTimeout(warnTimer);
+}
+
+// Eventos que indicam atividade do usuário
+['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(evt =>
+  document.addEventListener(evt, resetInactivityTimers, { passive: true })
+);
+
+// Inicia os timers (só disparam se usuário estiver logado)
+resetInactivityTimers();
