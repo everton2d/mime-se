@@ -588,10 +588,16 @@
 .loja-status-ok{background:rgba(34,197,94,.1);color:#15803d;border:1px solid rgba(34,197,94,.2)}
 .loja-status-off{background:var(--bg2);color:var(--tx3);border:1px solid var(--bdr)}
 
+/* ══ MOBILE TOP BAR ══ */
+.dash-mobile-bar{display:none}
+.dash-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99;backdrop-filter:blur(2px)}
+.dash-overlay.open{display:block}
+.dash-sidebar-close{display:none;background:none;border:none;color:var(--tx3);font-size:1rem;cursor:pointer;margin-left:auto;padding:.2rem .4rem;transition:color .2s}
+.dash-sidebar-close:hover{color:var(--tx)}
+
 /* ══ RESPONSIVE ══ */
 @media(max-width:1200px){
   .dash-grid-2{grid-template-columns:1fr}
-  /* Fix 6: responsivo para páginas com preview lateral */
   .page-split{grid-template-columns:1fr}
   .preview-sticky{position:static}
 }
@@ -603,11 +609,49 @@
   .lojas-grid{grid-template-columns:1fr}
 }
 @media(max-width:900px){
-  .dash-sidebar{transform:translateX(-100%)}
-  .dash-main{margin-left:0;padding:1.25rem}
+  /* Sidebar: hidden by default, slides in */
+  .dash-sidebar{transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+  .dash-sidebar.open{transform:translateX(0)}
+  .dash-sidebar-close{display:block}
+  /* Main: full width, push down for top bar */
+  .dash-main{margin-left:0;padding:5rem 1.25rem 1.25rem}
   .stats-grid{grid-template-columns:1fr 1fr}
   .leads-stats{grid-template-columns:1fr}
+  /* Top bar */
+  .dash-mobile-bar{
+    display:flex;align-items:center;gap:.75rem;
+    position:fixed;top:0;left:0;right:0;height:56px;
+    background:var(--bg1);border-bottom:1px solid var(--bdr);
+    padding:0 1.1rem;z-index:98;
+    transition:background .35s,border-color .35s
+  }
+  .dash-mobile-logo{
+    display:flex;align-items:center;gap:.5rem;
+    font-weight:800;font-size:1.05rem;letter-spacing:-.02em;
+    background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    flex:1
+  }
+  /* Sidebar logo row */
+  .dash-logo{display:flex;align-items:center;gap:.6rem}
+  /* Hide theme toggle from main pages — only show in top bar */
+  .dp-header-actions .toggle{display:none}
 }
 @media(max-width:480px){
-  .stats-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .leads-stats{grid-template-columns:1fr}
+  .colors-grid{grid-template-columns:1fr}
+  .dict-split{grid-template-columns:1fr}
+}
+
+/* ══ HAMBURGER ICON ══ */
+.dash-hamburger{
+  background:none;border:none;cursor:pointer;
+  display:flex;flex-direction:column;gap:5px;padding:.35rem;
+  border-radius:8px;transition:background .18s
+}
+.dash-hamburger:hover{background:var(--glow)}
+.dash-hamburger span{
+  display:block;width:22px;height:2px;
+  background:var(--tx);border-radius:2px;
+  transition:background .35s
 }

@@ -418,9 +418,28 @@
 <div class="page" id="page-dashboard">
   <div class="dash-layout">
 
+    <!-- MOBILE TOP BAR -->
+    <div class="dash-mobile-bar">
+      <button class="dash-hamburger" onclick="toggleSidebar()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="dash-mobile-logo">
+        <img src="assets/logo.png" alt="Mime-se" style="width:28px;height:28px;border-radius:7px">
+        <span>Mime-se</span>
+      </div>
+      <button class="toggle" id="dash-toggle-mobile" title="Alternar tema" style="flex-shrink:0"></button>
+    </div>
+
+    <!-- OVERLAY -->
+    <div class="dash-overlay" id="dash-overlay" onclick="toggleSidebar()"></div>
+
     <!-- SIDEBAR -->
-    <aside class="dash-sidebar">
-      <div class="dash-logo">Mime-se</div>
+    <aside class="dash-sidebar" id="dash-sidebar">
+      <div class="dash-logo">
+        <img src="assets/logo.png" alt="Mime-se" style="width:28px;height:28px;border-radius:7px;flex-shrink:0">
+        <span>Mime-se</span>
+        <button class="dash-sidebar-close" onclick="toggleSidebar()" aria-label="Fechar menu">✕</button>
+      </div>
       <div class="dash-user">
         <div class="dash-user-name" id="dash-user-name">Carregando...</div>
         <span class="dash-plan-badge" id="dash-plan-badge">FREE</span>

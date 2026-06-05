@@ -12,6 +12,25 @@ function escapeHtml(str) {
 }
 
 // ══════════════════════════════════════
+// MOBILE SIDEBAR TOGGLE
+// ══════════════════════════════════════
+function toggleSidebar() {
+  const sidebar = document.getElementById('dash-sidebar');
+  const overlay = document.getElementById('dash-overlay');
+  const isOpen = sidebar.classList.contains('open');
+  sidebar.classList.toggle('open', !isOpen);
+  overlay.classList.toggle('open', !isOpen);
+  document.body.style.overflow = isOpen ? '' : 'hidden';
+}
+function closeSidebar() {
+  const sidebar = document.getElementById('dash-sidebar');
+  const overlay = document.getElementById('dash-overlay');
+  sidebar.classList.remove('open');
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ══════════════════════════════════════
 // ROUTING
 // ══════════════════════════════════════
 function showDashPage(name) {
@@ -20,6 +39,7 @@ function showDashPage(name) {
   document.querySelectorAll('.dash-nav-item').forEach(item =>
     item.classList.toggle('active', item.dataset.page === name)
   );
+  closeSidebar(); // fecha sidebar ao navegar no mobile
   const loaders = {
     painel: loadPainel, links: loadPageLinks, grupos: loadPageGrupos,
     leads: loadPageLeads, config: loadPageConfig, lojas: loadPageLojas,
@@ -83,10 +103,12 @@ async function loadDashboard() {
       item.addEventListener('click', () => showDashPage(item.dataset.page))
     );
 
-    document.getElementById('dash-toggle')?.addEventListener('click', () => {
-      const html = document.documentElement;
-      html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('theme', html.dataset.theme);
+    ['dash-toggle', 'dash-toggle-mobile'].forEach(id => {
+      document.getElementById(id)?.addEventListener('click', () => {
+        const html = document.documentElement;
+        html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('theme', html.dataset.theme);
+      });
     });
 
     // FIX 1: único MutationObserver para redesenhar o gráfico
