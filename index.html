@@ -289,14 +289,14 @@
       </div>
       <div class="sf-col">
         <div class="sf-col-title">Produto</div>
-        <a href="#arsenal" class="sf-link" onclick="showPage('home')">Recursos</a>
-        <a href="#precos" class="sf-link" onclick="showPage('home')">Planos</a>
-        <a href="#" class="sf-link" onclick="showPage('register')">Teste Grátis</a>
+        <a class="sf-link" onclick="gotoSection('arsenal')">Recursos</a>
+        <a class="sf-link" onclick="gotoSection('precos')">Planos</a>
+        <a class="sf-link" onclick="showPage('register')">Teste Grátis</a>
       </div>
       <div class="sf-col">
         <div class="sf-col-title">Suporte</div>
         <a href="https://wa.me/5527997362780" class="sf-link" target="_blank">Central de Ajuda</a>
-        <a href="#precos" class="sf-link">Comparar Planos</a>
+        <a class="sf-link" onclick="gotoSection('precos')">Comparar Planos</a>
         <a href="https://wa.me/5527997362780" class="sf-link" target="_blank">Contato</a>
       </div>
       <div class="sf-col">
@@ -306,8 +306,8 @@
       </div>
       <div class="sf-col">
         <div class="sf-col-title">Acesso</div>
-        <a href="#" class="sf-link" onclick="showPage('login')">Login</a>
-        <a href="#" class="sf-link" onclick="showPage('register')">Criar conta</a>
+        <a class="sf-link" onclick="showPage('login')">Login</a>
+        <a class="sf-link" onclick="showPage('register')">Criar conta</a>
       </div>
     </div>
     <div class="sf-bottom">
@@ -546,7 +546,7 @@
                   <div class="form-toggle" id="ml-converter" data-on="false"><div class="form-toggle-knob"></div></div>
                   <span class="toggle-row-label">Converter Links</span>
                 </label>
-                <button class="btn-save-loja" style="background:#FFE600;color:#7a6000" onclick="saveMarketplace('mercadolivre')">💾 Salvar</button>
+                <button class="btn-save-loja" style="background:#FFE600;color:#7a6000" onclick="saveMarketplace('mercadolivre', this)">💾 Salvar</button>
               </div>
             </div>
           </div>
@@ -571,7 +571,7 @@
                   <div class="form-toggle" id="amz-converter" data-on="false"><div class="form-toggle-knob"></div></div>
                   <span class="toggle-row-label">Converter Links</span>
                 </label>
-                <button class="btn-save-loja" style="background:#FF9900;color:#fff" onclick="saveMarketplace('amazon')">💾 Salvar</button>
+                <button class="btn-save-loja" style="background:#FF9900;color:#fff" onclick="saveMarketplace('amazon', this)">💾 Salvar</button>
               </div>
             </div>
           </div>
@@ -600,7 +600,7 @@
               <div style="font-size:.75rem;color:var(--tx3);line-height:1.55;margin-bottom:1rem;transition:color .35s">Quando ativado a IA modificará automaticamente o <strong style="color:var(--tx2)">PREÇO COM DESCONTO</strong> para o <strong style="color:var(--tx2)">PREÇO COM PIX</strong>.</div>
               <div class="loja-footer" style="border-top:none;padding-top:0">
                 <div></div>
-                <button class="btn-save-loja" style="background:#EE4D2D;color:#fff" onclick="saveMarketplace('shopee')">💾 Salvar Configurações</button>
+                <button class="btn-save-loja" style="background:#EE4D2D;color:#fff" onclick="saveMarketplace('shopee', this)">💾 Salvar Configurações</button>
               </div>
             </div>
           </div>
@@ -621,7 +621,7 @@
                   <div class="form-toggle" id="mg-converter" data-on="false"><div class="form-toggle-knob"></div></div>
                   <span class="toggle-row-label">Converter Links</span>
                 </label>
-                <button class="btn-save-loja" style="background:#0086FF;color:#fff" onclick="saveMarketplace('magalu')">💾 Salvar</button>
+                <button class="btn-save-loja" style="background:#0086FF;color:#fff" onclick="saveMarketplace('magalu', this)">💾 Salvar</button>
               </div>
             </div>
           </div>
@@ -639,7 +639,7 @@
                   <div class="form-toggle" id="nat-converter" data-on="false"><div class="form-toggle-knob"></div></div>
                   <span class="toggle-row-label">Converter Links</span>
                 </label>
-                <button class="btn-save-loja" style="background:#008B4F;color:#fff" onclick="saveMarketplace('natura')">💾 Salvar</button>
+                <button class="btn-save-loja" style="background:#008B4F;color:#fff" onclick="saveMarketplace('natura', this)">💾 Salvar</button>
               </div>
             </div>
           </div>
@@ -658,7 +658,7 @@
                   <div class="form-toggle" id="sh-converter" data-on="false"><div class="form-toggle-knob"></div></div>
                   <span class="toggle-row-label">Converter Links</span>
                 </label>
-                <button class="btn-save-loja" style="background:#1A1A1A;color:#fff" onclick="saveMarketplace('shein')">💾 Salvar</button>
+                <button class="btn-save-loja" style="background:#1A1A1A;color:#fff" onclick="saveMarketplace('shein', this)">💾 Salvar</button>
               </div>
             </div>
           </div>

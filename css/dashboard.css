@@ -591,6 +591,9 @@
 /* ══ RESPONSIVE ══ */
 @media(max-width:1200px){
   .dash-grid-2{grid-template-columns:1fr}
+  /* Fix 6: responsivo para páginas com preview lateral */
+  .page-split{grid-template-columns:1fr}
+  .preview-sticky{position:static}
 }
 @media(max-width:1100px){
   .stats-grid{grid-template-columns:repeat(2,1fr)}

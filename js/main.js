@@ -8,12 +8,18 @@ const sb = createClient(
 );
 
 // ══════════════════════════════════════
-// THEME
+// THEME — persiste no localStorage
 // ══════════════════════════════════════
 const html = document.documentElement;
-document.getElementById('toggle').addEventListener('click', () => {
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) html.dataset.theme = savedTheme;
+
+function applyThemeToggle() {
   html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
-});
+  localStorage.setItem('theme', html.dataset.theme);
+}
+
+document.getElementById('toggle').addEventListener('click', applyThemeToggle);
 
 // ══════════════════════════════════════
 // PAGES
@@ -22,13 +28,18 @@ function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
   window.scrollTo(0, 0);
-  // Oculta o nav principal dentro do dashboard (tem navegação própria)
   const mainNav = document.getElementById('main-nav');
   if (mainNav) mainNav.style.display = name === 'dashboard' ? 'none' : '';
   ['reg-err','reg-ok','login-err','login-ok'].forEach(id => {
     const el = document.getElementById(id);
-    if(el){ el.className = 'alert ' + (id.includes('err') ? 'alert-err' : 'alert-ok'); el.textContent = ''; }
+    if (el) { el.className = 'alert ' + (id.includes('err') ? 'alert-err' : 'alert-ok'); el.textContent = ''; }
   });
+}
+
+// Fix 7: Navega para seção da home mesmo quando no dashboard
+function gotoSection(sectionId) {
+  showPage('home');
+  setTimeout(() => document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' }), 150);
 }
 
 // ══════════════════════════════════════
@@ -119,10 +130,7 @@ async function handleLogin() {
     okEl.textContent = '✅ Login realizado com sucesso! Redirecionando...';
     okEl.className = 'alert alert-ok show';
     showToast('Bem-vindo de volta! 🎉', 'ok');
-    setTimeout(() => {
-      showPage('dashboard');
-      loadDashboard();
-    }, 800);
+    setTimeout(() => { showPage('dashboard'); loadDashboard(); }, 800);
   }
 }
 
@@ -131,9 +139,7 @@ async function handleLogin() {
 // ══════════════════════════════════════
 async function handleForgot() {
   const email = document.getElementById('login-email').value.trim();
-  if (!email) {
-    showToast('Digite seu e-mail primeiro.', 'err'); return;
-  }
+  if (!email) { showToast('Digite seu e-mail primeiro.', 'err'); return; }
   const { error } = await sb.auth.resetPasswordForEmail(email, {
     redirectTo: 'https://mime-se.vercel.app'
   });
@@ -142,25 +148,19 @@ async function handleForgot() {
 }
 
 // ══════════════════════════════════════
-// MODES
+// MODES / FAQ / PRICING
 // ══════════════════════════════════════
 function switchMode(idx) {
   document.querySelectorAll('.mode-tab').forEach((t,i) => t.classList.toggle('active', i === idx));
   document.querySelectorAll('.mpanel').forEach((p,i) => p.classList.toggle('active', i === idx));
 }
 
-// ══════════════════════════════════════
-// FAQ
-// ══════════════════════════════════════
 function toggleFaq(el) {
   const was = el.classList.contains('open');
   document.querySelectorAll('.fq').forEach(f => f.classList.remove('open'));
   if (!was) el.classList.add('open');
 }
 
-// ══════════════════════════════════════
-// PRICING TOGGLE
-// ══════════════════════════════════════
 let isAnual = false;
 const prices = { mensal:[69,99,179,300], anual:[55,79,143,240] };
 function toggleAnual() {
@@ -176,7 +176,7 @@ function toggleAnual() {
 // SCROLL ANIMATIONS
 // ══════════════════════════════════════
 const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('vis'); obs.unobserve(e.target); } });
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); obs.unobserve(e.target); } });
 }, { threshold: 0.08 });
 document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
 
@@ -202,15 +202,9 @@ document.head.appendChild(style);
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
-    // Usuário logado: vai direto pro dashboard
     showPage('dashboard');
     loadDashboard();
   }
-
-  // Toggle de tema do dashboard
-  document.getElementById('dash-toggle')?.addEventListener('click', () => {
-    html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
-  });
 })();
 
 async function handleLogout() {
