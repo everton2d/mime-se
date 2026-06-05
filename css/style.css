@@ -275,6 +275,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:66px;padding:0 5%;
 .auth-alt a:hover{text-decoration:underline}
 .auth-terms{font-size:.72rem;color:var(--tx3);text-align:center;margin-top:.9rem;line-height:1.55}
 .auth-terms a{color:var(--coral)}
+.btn-google{
+  width:100%;padding:.72rem 1rem;border-radius:var(--r8);
+  background:var(--bg1);border:1px solid var(--bdr2);
+  font-size:.88rem;font-weight:700;color:var(--tx);font-family:var(--f);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.6rem;
+  transition:all .22s;margin-top:.5rem
+}
+.btn-google:hover{background:var(--glow);border-color:var(--coral)}
 .auth-foot-links{display:flex;gap:1.25rem;justify-content:center;margin-top:1.75rem;font-size:.75rem}
 .auth-foot-links a{color:var(--tx3);transition:color .2s}.auth-foot-links a:hover{color:var(--coral)}
 .divider-or{display:flex;align-items:center;gap:.75rem;margin:1.1rem 0;font-size:.75rem;color:var(--tx3)}

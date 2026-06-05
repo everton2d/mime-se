@@ -135,6 +135,45 @@ async function handleLogin() {
 }
 
 // ══════════════════════════════════════
+// GOOGLE OAUTH
+// ══════════════════════════════════════
+async function handleGoogleLogin() {
+  const errEl = document.getElementById('login-err') || document.getElementById('reg-err');
+  const { error } = await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: window.location.origin + window.location.pathname
+    }
+  });
+  if (error && errEl) {
+    errEl.textContent = '❌ ' + error.message;
+    errEl.className = 'alert alert-err show';
+  }
+}
+
+// Trata retorno do callback OAuth (hash com access_token)
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    showPage('dashboard');
+    if (typeof loadDashboard === 'function') loadDashboard();
+  }
+})();
+
+sb.auth.onAuthStateChange((event, session) => {
+  if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session) {
+    const activePage = document.querySelector('.page.active')?.id;
+    if (activePage === 'page-login' || activePage === 'page-register') {
+      showPage('dashboard');
+      if (typeof loadDashboard === 'function') loadDashboard();
+    }
+  }
+  if (event === 'SIGNED_OUT') {
+    showPage('home');
+  }
+});
+
+// ══════════════════════════════════════
 // FORGOT PASSWORD
 // ══════════════════════════════════════
 async function handleForgot() {
