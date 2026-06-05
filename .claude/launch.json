@@ -1,10 +1,10 @@
-{
+﻿{
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "mime-se-preview",
+      "name": "mime-se",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "-p", "3456", "C:\\Claude\\Code\\Projetos\\mime-se"],
+      "runtimeArgs": ["http-server", ".", "-p", "3456", "--silent"],
       "port": 3456
     }
   ]

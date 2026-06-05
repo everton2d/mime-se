@@ -305,6 +305,44 @@ footer{padding:2.5rem 5%;border-top:1px solid var(--bdr);display:flex;justify-co
 }
 @media(max-width:580px){
   .prob-grid,.arsenal-grid,.testi-grid,.price-grid{grid-template-columns:1fr}
-  .hero-kpi{gap:1rem}.mode-tabs{flex-direction:column;border-radius:var(--r16)}
+  .hero-kpi{gap:1rem}
+  .mode-tabs{display:grid;grid-template-columns:1fr 1fr;border-radius:var(--r16);width:100%}
   .sf-grid{grid-template-columns:1fr 1fr}
+}
+/* ══ MOBILE ══ */
+@media(max-width:480px){
+  /* Nav */
+  nav{padding:0 4%;height:60px}
+  .logo{font-size:1.1rem;white-space:nowrap}
+  .nav-end .btn-outline{display:none}
+  .nav-end .btn-primary{padding:.4rem .85rem;font-size:.78rem;white-space:nowrap}
+  .nav-end{gap:.5rem}
+  /* Hero */
+  .hero{padding:80px 4% 56px}
+  .hero-inner{gap:2rem}
+  .sec-title{font-size:clamp(1.65rem,7vw,2.2rem)}
+  .hero-kpi{gap:.75rem;margin-top:2rem}
+  .kpi-n{font-size:1.4rem}
+  .kpi-sep{display:none}
+  /* Hero CTA buttons — força quebra de linha */
+  .hero-btns{flex-direction:column!important;align-items:stretch!important;width:100%!important;gap:.7rem!important}
+  .hero-btns .btn{white-space:normal!important;text-align:center;justify-content:center}
+  /* Sections padding */
+  .prob-sec,.modes-sec,.arsenal-sec,.price-sec,.testi-sec,.faq-sec{padding:60px 0}
+  .sec-head{margin-bottom:2.25rem}
+  .sec-sub{font-size:.88rem}
+  /* Mode tabs — 2 col compacto */
+  .mode-tab{padding:.45rem .75rem;font-size:.75rem}
+  /* Pricing toggle */
+  .price-toggle{flex-wrap:wrap;gap:.5rem;justify-content:center}
+  /* Auth pages */
+  .auth-page{padding:70px 1rem 2rem}
+  .auth-right{padding:1.75rem 1.25rem}
+  /* CTA banner */
+  .cta-banner{padding:56px 0 64px}
+  .cta-banner-btn{padding:.85rem 1.75rem;font-size:.9rem}
+  /* Footer */
+  .sf-grid{grid-template-columns:1fr}
+  .sf-brand{grid-column:span 1}
+  footer{flex-direction:column;text-align:center;gap:.75rem}
 }
