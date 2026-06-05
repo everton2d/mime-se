@@ -44,7 +44,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:66px;padding:0 5%;
   display:flex;align-items:center;justify-content:space-between;gap:1rem;
   backdrop-filter:blur(22px) saturate(1.6);-webkit-backdrop-filter:blur(22px) saturate(1.6);
   background:var(--glass);border-bottom:1px solid var(--bdr);transition:all .3s}
-.logo{font-weight:800;font-size:1.35rem;letter-spacing:-.025em;
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none;cursor:pointer}
+.logo-img{width:32px;height:32px;border-radius:8px;flex-shrink:0}
+.logo-txt{font-weight:800;font-size:1.35rem;letter-spacing:-.025em;
   background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .nav-links{display:flex;gap:1.75rem;align-items:center}
 .nav-links a{font-size:.85rem;font-weight:500;color:var(--tx2);transition:color .2s;position:relative}
@@ -314,10 +316,11 @@ footer{padding:2.5rem 5%;border-top:1px solid var(--bdr);display:flex;justify-co
 @media(max-width:480px){
   /* Nav */
   nav{padding:0 4%;height:60px}
-  .logo{font-size:1.1rem;white-space:nowrap}
-  .nav-end .btn-outline{display:none}
-  .nav-end .btn-primary{padding:.4rem .85rem;font-size:.78rem;white-space:nowrap}
-  .nav-end{gap:.5rem}
+  .logo-txt{display:none}
+  .logo-img{width:36px;height:36px}
+  .nav-end .btn-outline{padding:.38rem .7rem;font-size:.75rem;white-space:nowrap}
+  .nav-end .btn-primary{padding:.38rem .75rem;font-size:.75rem;white-space:nowrap}
+  .nav-end{gap:.4rem}
   /* Hero */
   .hero{padding:80px 4% 56px}
   .hero-inner{gap:2rem}
@@ -343,7 +346,7 @@ footer{padding:2.5rem 5%;border-top:1px solid var(--bdr);display:flex;justify-co
   .cta-banner{padding:56px 0 64px}
   .cta-banner-btn{padding:.85rem 1.75rem;font-size:.9rem}
   /* Footer */
-  .sf-grid{grid-template-columns:1fr}
-  .sf-brand{grid-column:span 1}
+  .sf-grid{grid-template-columns:1fr 1fr}
+  .sf-brand{grid-column:span 2}
   footer{flex-direction:column;text-align:center;gap:.75rem}
 }
