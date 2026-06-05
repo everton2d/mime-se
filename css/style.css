@@ -347,6 +347,9 @@ footer{padding:2.5rem 5%;border-top:1px solid var(--bdr);display:flex;justify-co
   .cta-banner-btn{padding:.85rem 1.75rem;font-size:.9rem}
   /* Footer */
   .sf-grid{grid-template-columns:1fr 1fr}
-  .sf-brand{grid-column:span 2}
+  .sf-brand{grid-column:span 2;text-align:center}
+  .sf-brand .sf-desc{margin:0 auto}
+  .sf-brand .sf-social{justify-content:center}
+  .sf-brand .sf-logo{display:flex;align-items:center;justify-content:center;gap:.45rem}
   footer{flex-direction:column;text-align:center;gap:.75rem}
 }
