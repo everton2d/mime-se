@@ -61,7 +61,8 @@
 .dash-nav-item:hover{background:var(--glow);color:var(--tx)}
 .dash-nav-item.active{background:rgba(242,96,58,.1);color:var(--coral)}
 
-.nav-icon{font-size:.95rem;width:20px;text-align:center;flex-shrink:0}
+.nav-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-icon svg{display:block;flex-shrink:0}
 
 .dash-divider{height:1px;background:var(--bdr);margin:.75rem 1.25rem;transition:background .35s}
 
@@ -101,7 +102,7 @@
 .stat-card:hover{border-color:var(--bdr2);transform:translateY(-2px);box-shadow:0 12px 32px var(--sh)}
 .stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad)}
 
-.stat-icon{font-size:1.4rem;margin-bottom:.7rem;display:block}
+.stat-icon{width:40px;height:40px;margin-bottom:.9rem;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(242,96,58,.1);color:var(--coral);flex-shrink:0}
 
 .stat-val{
   font-size:2.2rem;font-weight:800;letter-spacing:-.04em;line-height:1;

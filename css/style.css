@@ -138,7 +138,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:66px;padding:0 5%;
 .prob-sec{padding:90px 0}
 .prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:2.5rem}
 .prob-card{padding:1.8rem}
-.prob-icon{font-size:2.2rem;margin-bottom:.9rem;display:block}
+.prob-icon{width:52px;height:52px;margin-bottom:1.1rem;display:flex;align-items:center;justify-content:center;border-radius:14px;background:var(--glow);color:var(--coral)}
 .prob-title{font-size:1.05rem;font-weight:700;margin-bottom:.6rem}
 .prob-desc{font-size:.86rem;color:var(--tx2);line-height:1.65}
 /* ══ MODES ══ */
@@ -166,7 +166,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:66px;padding:0 5%;
 .arsenal-sec{padding:90px 0}
 .arsenal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
 .ac{padding:1.5rem 1.6rem}
-.ac-icon{width:44px;height:44px;border-radius:var(--r12);display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:1rem;flex-shrink:0}
+.ac-icon{width:44px;height:44px;border-radius:var(--r12);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;flex-shrink:0}
 .ac-title{font-size:1rem;font-weight:700;margin-bottom:.55rem}
 .ac-desc{font-size:.83rem;color:var(--tx2);line-height:1.65;margin-bottom:.9rem}
 .ac-tag{display:inline-flex;align-items:center;gap:.3rem;font-size:.7rem;font-weight:700;padding:.28rem .75rem;border-radius:99px}
