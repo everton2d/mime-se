@@ -128,18 +128,19 @@ async function loadPainel() {
   if (!session) return;
   const uid = session.user.id;
 
-  const [lR, gR, dR, ldR] = await Promise.all([
+  const since7d = new Date(); since7d.setDate(since7d.getDate() - 7); since7d.setHours(0,0,0,0);
+  const [lR, gR, dR, prR] = await Promise.all([
     sb.from('links').select('id', { count: 'exact', head: true }).eq('user_id', uid),
     sb.from('grupos').select('id', { count: 'exact', head: true }).eq('user_id', uid).eq('ativo', true),
     sb.from('disparos').select('id', { count: 'exact', head: true }).eq('user_id', uid).eq('status', 'enviado'),
-    sb.from('leads').select('id', { count: 'exact', head: true }).eq('user_id', uid).eq('ativo', true),
+    sb.from('links').select('id', { count: 'exact', head: true }).eq('user_id', uid).gte('created_at', since7d.toISOString()),
   ]);
 
   const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val ?? 0; };
   setText('stat-links', lR.count);
   setText('stat-grupos', gR.count);
   setText('stat-disparos', dR.count);
-  setText('stat-leads', ldR.count);
+  setText('stat-leads', prR.count);
 
   // Chart: últimos 7 dias
   const labels = [], counts = [];
@@ -262,21 +263,28 @@ async function gerarLink() {
     const { data: { session } } = await sb.auth.getSession();
     if (!session) { showPage('login'); return; }
 
-    const plataforma = detectarPlataforma(input);
-    const { data, error } = await sb.from('links').insert({
-      user_id: session.user.id, url_original: input, url_afiliado: input, plataforma,
-    }).select().single();
+    const { data, error } = await sb.functions.invoke('generate-affiliate-link', {
+      body: { url: input },
+    });
 
     if (error) { showToast('Erro: ' + error.message, 'err'); return; }
+    if (data?.error) { showToast('Erro: ' + data.error, 'err'); return; }
+
+    const plataforma = data.platform;
+    const affiliateUrl = data.affiliate_url;
+    const hasConfig = data.has_affiliate_config;
 
     resultEl.innerHTML = `
-      <div style="font-size:.73rem;color:var(--tx3);margin-bottom:.4rem">✅ Plataforma detectada: <strong style="color:var(--coral)">${escapeHtml(plataforma)}</strong></div>
-      <span class="quick-result-link">${escapeHtml(data.url_afiliado)}</span>`;
+      <div style="font-size:.73rem;color:var(--tx3);margin-bottom:.4rem">
+        ✅ Plataforma: <strong style="color:var(--coral)">${escapeHtml(plataforma)}</strong>
+        ${!hasConfig && plataforma !== 'outro' ? ' — <span style="color:#b45309">configure a loja para adicionar sua tag de afiliado</span>' : ''}
+      </div>
+      <span class="quick-result-link">${escapeHtml(affiliateUrl)}</span>
+      <button onclick="copyLink('${affiliateUrl.replace(/'/g, "\\'")}', this)" class="btn-copy" style="margin-top:.6rem;width:100%;padding:.45rem">Copiar link</button>`;
     resultEl.classList.add('show');
-    showToast('Link gerado!', 'ok');
+    showToast(hasConfig ? '✅ Link afiliado gerado!' : 'Link salvo! Configure a loja para adicionar sua tag.', 'ok');
     loadPainel();
   } finally {
-    // FIX 4: garante que botão sempre volta ao estado normal
     btn.disabled = false; btn.textContent = 'Gerar Link';
   }
 }
@@ -296,6 +304,7 @@ function detectarPlataforma(url) {
 // MEUS LINKS
 // ══════════════════════════════════════
 let _currentFilter = 'todos';
+let _allLinks = [];
 
 async function loadPageLinks(filter) {
   if (filter !== undefined) _currentFilter = filter;
@@ -306,7 +315,19 @@ async function loadPageLinks(filter) {
   if (_currentFilter !== 'todos') q = q.eq('plataforma', _currentFilter);
 
   const { data: links } = await q;
-  renderLinksTable(links || []);
+  _allLinks = links || [];
+  searchLinks();
+}
+
+function searchLinks() {
+  const term = document.getElementById('links-search')?.value.trim().toLowerCase() || '';
+  if (!term) { renderLinksTable(_allLinks); return; }
+  const filtered = _allLinks.filter(l =>
+    (l.titulo || '').toLowerCase().includes(term) ||
+    (l.plataforma || '').toLowerCase().includes(term) ||
+    (l.url_original || '').toLowerCase().includes(term)
+  );
+  renderLinksTable(filtered);
 }
 
 function renderLinksTable(links) {
@@ -316,18 +337,21 @@ function renderLinksTable(links) {
     tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><span class="empty-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span><div class="empty-title">Nenhum link encontrado</div><div class="empty-desc">Gere seu primeiro link no painel.</div></div></td></tr>`;
     return;
   }
-  // FIX 2+3: escapa HTML e usa data-url para evitar XSS no copyLink
   tbody.innerHTML = links.map(l => {
     const plat = escapeHtml(l.plataforma || 'outro');
     const titulo = escapeHtml(l.titulo || '—');
     const data = new Date(l.created_at).toLocaleDateString('pt-BR');
     const url = escapeHtml(l.url_afiliado || l.url_original || '');
+    const id = escapeHtml(l.id);
     return `<tr>
       <td><span class="plat-badge plat-${plat}">${plat}</span></td>
       <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tx)">${titulo}</td>
       <td style="color:var(--tx)">${escapeHtml(l.preco) || '—'}</td>
       <td>${data}</td>
-      <td><button class="btn-copy" data-url="${url}" onclick="copyLink(this.dataset.url, this)">Copiar</button></td>
+      <td style="white-space:nowrap">
+        <button class="btn-copy" data-url="${url}" onclick="copyLink(this.dataset.url, this)">Copiar</button>
+        <button class="btn-delete" data-id="${id}" onclick="deleteLink(this.dataset.id, this)">Excluir</button>
+      </td>
     </tr>`;
   }).join('');
 }
@@ -344,6 +368,19 @@ function setFilter(filter, el) {
   document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   loadPageLinks(filter);
+}
+
+async function deleteLink(id, btn) {
+  if (!confirm('Excluir este link?')) return;
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const origText = btn.textContent;
+  btn.disabled = true; btn.textContent = '...';
+  const { error } = await sb.from('links').delete().eq('id', id).eq('user_id', session.user.id);
+  if (error) { showToast('Erro ao excluir: ' + error.message, 'err'); btn.disabled = false; btn.textContent = origText; return; }
+  showToast('Link excluído!', 'ok');
+  loadPageLinks();
+  loadPainel();
 }
 
 // ══════════════════════════════════════
@@ -483,9 +520,7 @@ async function loadPageLojas() {
   if (!session) return;
 
   const { data: configs } = await sb.from('marketplace_configs').select('*').eq('user_id', session.user.id);
-  if (!configs?.length) return;
-
-  const map = Object.fromEntries(configs.map(c => [c.marketplace, c]));
+  const map = Object.fromEntries((configs || []).map(c => [c.marketplace, c]));
 
   const fill = (mkt, fields) => {
     const c = map[mkt];
@@ -506,6 +541,50 @@ async function loadPageLojas() {
   fill('magalu', [['mg-tag','tag'],['mg-promoter','promoter_id'],['mg-partner','partner_id']]);
   fill('natura', [['nat-tag','tag']]);
   fill('shein', [['sh-extensao','extensao']]);
+
+  // Atualiza badges de status
+  const statusMap = { mercadolivre:'ml', amazon:'amz', shopee:'sp', magalu:'mg', natura:'nat', shein:'sh' };
+  Object.entries(statusMap).forEach(([mkt, prefix]) => {
+    const badge = document.getElementById(`status-${prefix}`);
+    if (!badge) return;
+    const c = map[mkt];
+    const ok = c?.ativo && c?.converter_links;
+    badge.className = `loja-status ${ok ? 'loja-status-ok' : 'loja-status-off'}`;
+    badge.textContent = ok ? '● Configurado' : '○ Não configurado';
+  });
+}
+
+async function testarConexao(mkt, btn) {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const origHTML = btn.innerHTML;
+  btn.disabled = true; btn.textContent = '⟳ Testando...';
+
+  try {
+    const { data: c } = await sb.from('marketplace_configs')
+      .select('config, converter_links, ativo')
+      .eq('user_id', session.user.id)
+      .eq('marketplace', mkt)
+      .single();
+
+    const required = { amazon: 'tag', shopee: 'appid', mercadolivre: 'etiqueta', magalu: 'tag', natura: 'tag', shein: 'extensao' };
+    const reqField = required[mkt];
+
+    if (!c) {
+      showToast(`${mkt}: nenhuma configuração salva ainda.`, 'err'); return;
+    }
+    if (reqField && !c.config?.[reqField]) {
+      showToast(`Configure o campo obrigatório antes de testar.`, 'err'); return;
+    }
+    if (!c.converter_links) {
+      showToast(`Ative "Converter Links" para usar esta integração.`, 'err'); return;
+    }
+    showToast(`✅ Integração ${mkt} configurada corretamente!`, 'ok');
+    const badge = document.getElementById(`status-${({ mercadolivre:'ml', amazon:'amz', shopee:'sp', magalu:'mg', natura:'nat', shein:'sh' })[mkt]}`);
+    if (badge) { badge.className = 'loja-status loja-status-ok'; badge.textContent = '● Configurado'; }
+  } finally {
+    btn.disabled = false; btn.innerHTML = origHTML;
+  }
 }
 
 // FIX 3: recebe btn como parâmetro em vez de usar event?.target

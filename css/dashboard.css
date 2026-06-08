@@ -215,13 +215,15 @@
 .filter-tab:hover{border-color:var(--bdr2);color:var(--tx)}
 .filter-tab.active{background:rgba(242,96,58,.1);border-color:rgba(242,96,58,.3);color:var(--coral)}
 
-/* ══ BTN COPY ══ */
-.btn-copy{
+/* ══ BTN COPY / DELETE ══ */
+.btn-copy,.btn-delete{
   padding:.32rem .7rem;border-radius:6px;font-size:.7rem;font-weight:700;
   background:var(--bg2);border:1px solid var(--bdr);color:var(--tx2);
   cursor:pointer;font-family:var(--f);transition:all .18s
 }
 .btn-copy:hover{border-color:var(--coral);color:var(--coral)}
+.btn-delete{margin-left:.3rem}
+.btn-delete:hover{border-color:#ef4444;color:#ef4444;background:rgba(239,68,68,.06)}
 
 /* ══ BTN OUTLINE SM ══ */
 .btn-outline-sm{
