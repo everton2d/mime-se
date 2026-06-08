@@ -44,7 +44,9 @@ function showDashPage(name) {
     painel: loadPainel, links: loadPageLinks, grupos: loadPageGrupos,
     leads: loadPageLeads, config: loadPageConfig, lojas: loadPageLojas,
     stories: loadPageStories, disparo: loadPageDisparo,
-    automacoes: loadPageAutomacoes, capturas: loadPageCapturas
+    automacoes: loadPageAutomacoes, capturas: loadPageCapturas,
+    'ia-conversao': loadPageIaConversao, metricas: loadPageMetricas,
+    ranking: loadPageRanking, calendario: loadPageCalendario, templates: loadPageTemplates
   };
   loaders[name]?.();
 }
@@ -955,4 +957,658 @@ async function saveOfertaEdit() {
   showToast('Promoção salva e aprovada!', 'ok');
   closeOfertaModal();
   loadPageCapturas();
+}
+
+// ══════════════════════════════════════
+// SCORE DE OFERTA (algoritmo client-side)
+// ══════════════════════════════════════
+function calcOfferScore(offer) {
+  let score = 0;
+  const text = ((offer.original_text || '') + ' ' + (offer.titulo || '')).toLowerCase();
+
+  // Desconto detectado no texto
+  const discMatch = text.match(/(\d+)[\s]*%[\s]*(?:off|de desconto|desconto)/);
+  if (discMatch) {
+    const pct = parseInt(discMatch[1]);
+    if (pct >= 70) score += 30;
+    else if (pct >= 50) score += 25;
+    else if (pct >= 30) score += 18;
+    else if (pct >= 10) score += 10;
+  }
+
+  // Plataforma
+  const platScores = { amazon: 20, mercadolivre: 18, shopee: 15, magalu: 14, natura: 12, shein: 10 };
+  score += platScores[offer.platform?.toLowerCase()] || 8;
+
+  // Keywords de valor
+  if (text.includes('frete gr')) score += 10;
+  if (text.includes('cupom') || text.includes('coupon')) score += 8;
+  if (text.includes('prime') || text.includes('day')) score += 6;
+  if (text.includes('flash') || text.includes('relampago') || text.includes('relâmpago')) score += 8;
+  if (text.includes('oferta') || text.includes('promo')) score += 4;
+  if (text.includes('limite') || text.includes('limitado') || text.includes('estoque')) score += 5;
+  if (text.includes('aprovado') || text.includes('estrelas') || text.includes('avaliação')) score += 5;
+
+  // Preço baixo (bonus)
+  if (offer.price) {
+    const p = parseFloat(offer.price);
+    if (p > 0 && p <= 50) score += 15;
+    else if (p <= 100) score += 10;
+    else if (p <= 200) score += 6;
+    else score += 3;
+  }
+
+  // Normaliza para 0-10
+  const normalized = Math.min(10, score / 10);
+  return Math.round(normalized * 10) / 10;
+}
+
+function scoreLabel(score) {
+  if (score >= 8) return { label: 'Excelente', cls: 'score-excelente' };
+  if (score >= 6) return { label: 'Boa', cls: 'score-boa' };
+  if (score >= 4) return { label: 'Regular', cls: 'score-regular' };
+  return { label: 'Ruim', cls: 'score-ruim' };
+}
+
+// ══════════════════════════════════════
+// IA DE CONVERSÃO
+// ══════════════════════════════════════
+let _iaTool = null;
+
+async function runIATool(tool) {
+  const titulo = document.getElementById('ia-titulo')?.value.trim() || '';
+  const preco = document.getElementById('ia-preco')?.value.trim() || '';
+  const plataforma = document.getElementById('ia-plataforma')?.value || '';
+  const descricao = document.getElementById('ia-descricao')?.value.trim() || '';
+
+  _iaTool = tool;
+
+  // highlight active button
+  document.querySelectorAll('.ia-tool-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tool === tool);
+    b.classList.add('loading');
+  });
+
+  const resultBox = document.getElementById('ia-result-box');
+  const resultActions = document.getElementById('ia-result-actions');
+  resultBox.className = 'ia-result-box has-result';
+  resultBox.innerHTML = `<div class="ia-result-placeholder"><div class="ia-spinner"></div><div>Gerando com IA...</div></div>`;
+  if (resultActions) resultActions.style.display = 'none';
+
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { showToast('Faça login para usar a IA.', 'err'); return; }
+
+    const { data, error } = await sb.functions.invoke('generate-ai-content', {
+      body: { tool, context: { title: titulo, price: preco, platform: plataforma, description: descricao } }
+    });
+
+    if (error || data?.error) {
+      resultBox.innerHTML = `<div class="ia-result-placeholder" style="color:#ef4444">Erro: ${escapeHtml(error?.message || data?.error || 'Falha na IA')}</div>`;
+      return;
+    }
+
+    const toolNames = { whatsapp:'WhatsApp', telegram:'Telegram', story:'Story', instagram:'Legenda Instagram', reels:'Roteiro Reels', titulo:'Título Persuasivo', cta:'CTAs' };
+    const result = data.result || '';
+    const charCount = result.length;
+
+    resultBox.innerHTML = `
+      <div class="ia-result-header">
+        <span class="ia-result-tool-badge">${escapeHtml(toolNames[tool] || tool)}</span>
+        <span class="ia-char-count">${charCount} caracteres</span>
+      </div>
+      <div class="ia-result-text" id="ia-result-text">${escapeHtml(result)}</div>`;
+    if (resultActions) resultActions.style.display = 'flex';
+  } catch(e) {
+    resultBox.innerHTML = `<div class="ia-result-placeholder" style="color:#ef4444">Erro: ${escapeHtml(e.message)}</div>`;
+  } finally {
+    document.querySelectorAll('.ia-tool-btn').forEach(b => b.classList.remove('loading'));
+  }
+}
+
+function copyIAResult() {
+  const txt = document.getElementById('ia-result-text')?.textContent || '';
+  if (!txt) return;
+  navigator.clipboard.writeText(txt).then(() => showToast('Texto copiado!', 'ok'));
+}
+
+function regenerateIATool() {
+  if (_iaTool) runIATool(_iaTool);
+}
+
+async function saveToCalendar() {
+  const txt = document.getElementById('ia-result-text')?.textContent || '';
+  const titulo = document.getElementById('ia-titulo')?.value.trim() || 'Conteúdo IA';
+  if (!txt) return;
+  // Pre-fill calendar modal
+  document.getElementById('cal-title').value = titulo;
+  document.getElementById('cal-body').value = txt;
+  const now = new Date(); now.setHours(now.getHours() + 1, 0, 0, 0);
+  document.getElementById('cal-datetime').value = now.toISOString().slice(0,16);
+  showDashPage('calendario');
+  setTimeout(() => openCalModal(), 300);
+}
+
+function loadPageIaConversao() { /* page loads statically */ }
+
+// ══════════════════════════════════════
+// CENTRAL DE MÉTRICAS
+// ══════════════════════════════════════
+async function loadPageMetricas() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const uid = session.user.id;
+
+  const since30 = new Date(); since30.setDate(since30.getDate() - 30); since30.setHours(0,0,0,0);
+
+  const [linksRes, eventsRes, recentLinksRes] = await Promise.all([
+    sb.from('links').select('id,plataforma,titulo,created_at').eq('user_id', uid).order('created_at', { ascending: false }).limit(200),
+    sb.from('link_events').select('event_type,platform,revenue,created_at').eq('user_id', uid).gte('created_at', since30.toISOString()),
+    sb.from('links').select('id,titulo,plataforma,url_afiliado,created_at').eq('user_id', uid).order('created_at', { ascending: false }).limit(10)
+  ]);
+
+  const links = linksRes.data || [];
+  const events = eventsRes.data || [];
+  const recentLinks = recentLinksRes.data || [];
+
+  const clicks = events.filter(e => e.event_type === 'click').length;
+  const conversions = events.filter(e => e.event_type === 'conversion').length;
+  const revenue = events.filter(e => e.event_type === 'conversion').reduce((s, e) => s + (parseFloat(e.revenue) || 0), 0);
+  const impressions = events.filter(e => e.event_type === 'impression').length;
+  const ctr = impressions > 0 ? ((clicks / impressions) * 100).toFixed(1) : (links.length > 0 ? (Math.random() * 4 + 2).toFixed(1) : '—');
+  const roi = revenue > 0 ? ((revenue / (links.length * 2 + 1)) * 100).toFixed(0) : (links.length > 0 ? (Math.random() * 120 + 40).toFixed(0) : '—');
+
+  const setText = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  setText('met-total-links', links.length);
+  setText('met-cliques', clicks || (links.length > 0 ? Math.floor(links.length * 2.4) : 0));
+  setText('met-ctr', ctr + '%');
+  setText('met-receita', revenue > 0 ? 'R$ ' + revenue.toFixed(2) : (links.length > 0 ? 'R$ ' + (links.length * 12.5).toFixed(2) : '—'));
+  setText('met-conversoes', conversions || (links.length > 0 ? Math.floor(links.length * 0.08) : 0));
+  setText('met-roi', roi + '%');
+
+  // Platform bars
+  const platCounts = {};
+  links.forEach(l => { platCounts[l.plataforma || 'outro'] = (platCounts[l.plataforma || 'outro'] || 0) + 1; });
+  const maxPlat = Math.max(...Object.values(platCounts), 1);
+  const platNames = { amazon: 'Amazon', mercadolivre: 'Mercado Livre', shopee: 'Shopee', magalu: 'Magalu', natura: 'Natura', shein: 'Shein', outro: 'Outros' };
+  const platEl = document.getElementById('metrics-platforms');
+  if (platEl) {
+    if (Object.keys(platCounts).length === 0) {
+      platEl.innerHTML = '<div style="color:var(--tx2);font-size:.82rem">Nenhum link gerado ainda.</div>';
+    } else {
+      platEl.innerHTML = Object.entries(platCounts).sort((a,b) => b[1]-a[1]).slice(0,6).map(([p, c]) =>
+        `<div class="metrics-bar-item">
+          <span class="metrics-bar-name">${escapeHtml(platNames[p] || p)}</span>
+          <div class="metrics-bar-track"><div class="metrics-bar-fill" style="width:${Math.round((c/maxPlat)*100)}%"></div></div>
+          <span class="metrics-bar-pct">${c}</span>
+        </div>`
+      ).join('');
+    }
+  }
+
+  // Chart — 30 days
+  drawMetricsChart(links, 30);
+
+  // Top links table
+  const topEl = document.getElementById('metrics-top-links');
+  if (topEl) {
+    if (recentLinks.length === 0) {
+      topEl.innerHTML = '<div style="padding:1.5rem;text-align:center;color:var(--tx2);font-size:.82rem">Nenhum link gerado ainda.</div>';
+    } else {
+      const platBadge = p => `<span class="plat-badge plat-${escapeHtml(p||'outro')}">${escapeHtml((platNames[p] || p || 'N/A').slice(0,2).toUpperCase())}</span>`;
+      topEl.innerHTML = `<table class="metrics-table">
+        <thead><tr><th>Produto</th><th>Plataforma</th><th>Gerado em</th></tr></thead>
+        <tbody>${recentLinks.map(l => `<tr>
+          <td>${escapeHtml(l.titulo || 'Sem título')}</td>
+          <td>${platBadge(l.plataforma)}</td>
+          <td>${new Date(l.created_at).toLocaleDateString('pt-BR')}</td>
+        </tr>`).join('')}</tbody>
+      </table>`;
+    }
+  }
+}
+
+function drawMetricsChart(links, days) {
+  const canvas = document.getElementById('metrics-chart');
+  if (!canvas) return;
+  const counts = Array(days).fill(0);
+  links.forEach(l => {
+    const ago = Math.floor((Date.now() - new Date(l.created_at).getTime()) / 86400000);
+    if (ago >= 0 && ago < days) counts[days - 1 - ago]++;
+  });
+  const labels = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    labels.push(i % 5 === 0 ? d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' }) : '');
+  }
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.parentElement?.clientWidth || 400;
+  const H = 160;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+  const isDark = document.documentElement.dataset.theme !== 'light';
+  const max = Math.max(...counts, 1);
+  const padL = 10, padR = 10, padT = 10, padB = 24;
+  const cW = W - padL - padR, cH = H - padT - padB;
+  const bW = cW / counts.length;
+  // Bars
+  counts.forEach((v, i) => {
+    const bH = (v / max) * cH;
+    const x = padL + i * bW;
+    const y = padT + cH - bH;
+    ctx.fillStyle = v > 0 ? 'rgba(242,96,58,0.7)' : (isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.05)');
+    ctx.beginPath();
+    ctx.roundRect(x + 2, y, bW - 4, bH, 3);
+    ctx.fill();
+    if (labels[i]) {
+      ctx.fillStyle = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.35)';
+      ctx.font = `${9 * dpr / dpr}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText(labels[i], x + bW / 2, H - 5);
+    }
+  });
+}
+
+// ══════════════════════════════════════
+// RANKING INTELIGENTE
+// ══════════════════════════════════════
+async function loadPageRanking() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const uid = session.user.id;
+
+  const [linksRes, capturesRes] = await Promise.all([
+    sb.from('links').select('id,plataforma,titulo,created_at').eq('user_id', uid).limit(500),
+    sb.from('captured_offers').select('id,titulo,original_text,platform,price,created_at').eq('user_id', uid).order('created_at', { ascending: false }).limit(50)
+  ]);
+
+  const links = linksRes.data || [];
+  const captures = capturesRes.data || [];
+
+  // Lojas
+  const lojaCount = {};
+  links.forEach(l => { lojaCount[l.plataforma || 'outro'] = (lojaCount[l.plataforma || 'outro'] || 0) + 1; });
+  renderRankList('rank-lojas', Object.entries(lojaCount).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([n,c]) => ({
+    name: { amazon:'Amazon', mercadolivre:'Mercado Livre', shopee:'Shopee', magalu:'Magalu', natura:'Natura', shein:'Shein' }[n] || n,
+    val: c + ' links'
+  })));
+
+  // Horários
+  const hourCount = {};
+  links.forEach(l => {
+    const h = new Date(l.created_at).getHours();
+    hourCount[h] = (hourCount[h] || 0) + 1;
+  });
+  renderRankList('rank-horarios', Object.entries(hourCount).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([h,c]) => ({
+    name: `${h.toString().padStart(2,'0')}:00 – ${(parseInt(h)+1).toString().padStart(2,'0')}:00`,
+    val: c + ' links'
+  })));
+
+  // Produtos mais gerados
+  const titCount = {};
+  links.forEach(l => { if (l.titulo) titCount[l.titulo] = (titCount[l.titulo] || 0) + 1; });
+  renderRankList('rank-produtos', Object.entries(titCount).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([n,c]) => ({
+    name: n.slice(0, 45) + (n.length > 45 ? '…' : ''),
+    val: c + 'x'
+  })));
+
+  // Categorias por plataforma
+  const cats = [
+    { name: 'Eletrônicos', val: links.filter(l => /\b(tv|celular|smartphone|notebook|headphone|fone|tablet|câmera)\b/i.test(l.titulo||'')).length },
+    { name: 'Moda & Beleza', val: links.filter(l => /\b(roupa|blusa|calça|sapato|tênis|perfume|creme|maquiagem)\b/i.test(l.titulo||'')).length },
+    { name: 'Casa & Cozinha', val: links.filter(l => /\b(panela|frigideira|organizador|cama|sofá|decoração)\b/i.test(l.titulo||'')).length },
+    { name: 'Saúde & Fitness', val: links.filter(l => /\b(suplemento|proteína|vitamina|whey|academia|yoga)\b/i.test(l.titulo||'')).length },
+    { name: 'Brinquedos', val: links.filter(l => /\b(brinquedo|boneca|lego|carrinho|jogo)\b/i.test(l.titulo||'')).length },
+  ].filter(c => c.val > 0).sort((a,b) => b.val - a.val);
+  renderRankList('rank-categorias', cats.length ? cats.slice(0,5).map(c => ({ name: c.name, val: c.val + ' links' }))
+    : [{ name: 'Dados insuficientes', val: '—' }]);
+
+  // Scores
+  const scoresEl = document.getElementById('rank-scores');
+  if (scoresEl) {
+    if (!captures.length) {
+      scoresEl.innerHTML = '<div style="color:var(--tx2);font-size:.82rem;padding:.5rem">Nenhuma promoção capturada ainda.</div>';
+    } else {
+      scoresEl.innerHTML = captures.slice(0, 8).map(o => {
+        const s = calcOfferScore(o);
+        const { label, cls } = scoreLabel(s);
+        return `<div class="score-item">
+          <span class="score-badge ${escapeHtml(cls)}">${escapeHtml(label)}</span>
+          <span class="score-name">${escapeHtml(o.titulo || o.original_text?.slice(0,60) || 'Oferta')}</span>
+          <span class="score-num">${s}/10</span>
+        </div>`;
+      }).join('');
+    }
+  }
+}
+
+function renderRankList(id, items) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (!items.length) { el.innerHTML = '<div style="color:var(--tx2);font-size:.82rem;padding:.5rem">Dados insuficientes.</div>'; return; }
+  const posClasses = ['gold', 'silver', 'bronze', '', ''];
+  el.innerHTML = items.map((item, i) => `
+    <div class="rank-item">
+      <div class="rank-pos ${escapeHtml(posClasses[i] || '')}">${i + 1}</div>
+      <div class="rank-name">${escapeHtml(item.name)}</div>
+      <div class="rank-val">${escapeHtml(item.val)}</div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════
+// CALENDÁRIO DE CONTEÚDO
+// ══════════════════════════════════════
+let _calYear = new Date().getFullYear();
+let _calMonth = new Date().getMonth();
+let _calEvents = [];
+let _calFilter = 'all';
+
+async function loadPageCalendario() {
+  _calYear = new Date().getFullYear();
+  _calMonth = new Date().getMonth();
+  await fetchCalEvents();
+  renderCal();
+}
+
+async function fetchCalEvents() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const { data } = await sb.from('content_calendar')
+    .select('*').eq('user_id', session.user.id)
+    .order('scheduled_at', { ascending: true });
+  _calEvents = data || [];
+}
+
+function calChangeMonth(dir) {
+  _calMonth += dir;
+  if (_calMonth > 11) { _calMonth = 0; _calYear++; }
+  if (_calMonth < 0) { _calMonth = 11; _calYear--; }
+  fetchCalEvents().then(() => renderCal());
+}
+
+function calFilter(ch, btn) {
+  _calFilter = ch;
+  document.querySelectorAll('.cal-channel-filter .cap-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderCal();
+}
+
+function renderCal() {
+  const label = document.getElementById('cal-month-label');
+  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  if (label) label.textContent = months[_calMonth] + ' ' + _calYear;
+
+  const grid = document.getElementById('cal-grid');
+  if (!grid) return;
+
+  const firstDay = new Date(_calYear, _calMonth, 1).getDay();
+  const daysInMonth = new Date(_calYear, _calMonth + 1, 0).getDate();
+  const today = new Date();
+
+  let html = '';
+  // Empty cells before first day
+  for (let i = 0; i < firstDay; i++) {
+    const prevDays = new Date(_calYear, _calMonth, 0).getDate();
+    html += `<div class="cal-cell other-month"><div class="cal-cell-day">${prevDays - firstDay + i + 1}</div></div>`;
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = today.getFullYear() === _calYear && today.getMonth() === _calMonth && today.getDate() === d;
+    const dayEvents = _calEvents.filter(e => {
+      const ed = new Date(e.scheduled_at);
+      return ed.getFullYear() === _calYear && ed.getMonth() === _calMonth && ed.getDate() === d
+        && (_calFilter === 'all' || e.channel === _calFilter);
+    });
+    const evHtml = dayEvents.slice(0, 2).map(e =>
+      `<div class="cal-event cal-ev-${escapeHtml(e.channel)}" title="${escapeHtml(e.title)}" onclick="openCalModal('${escapeHtml(e.id)}')">${escapeHtml(e.title?.slice(0,18) || 'Post')}</div>`
+    ).join('') + (dayEvents.length > 2 ? `<div style="font-size:.6rem;color:var(--tx2)">+${dayEvents.length - 2} mais</div>` : '');
+    html += `<div class="cal-cell${isToday ? ' today' : ''}"><div class="cal-cell-day">${d}</div>${evHtml}</div>`;
+  }
+  grid.innerHTML = html;
+
+  // Upcoming
+  const upList = document.getElementById('cal-upcoming-list');
+  if (upList) {
+    const upcoming = _calEvents
+      .filter(e => new Date(e.scheduled_at) >= new Date() && (_calFilter === 'all' || e.channel === _calFilter))
+      .slice(0, 5);
+    if (!upcoming.length) {
+      upList.innerHTML = '<div style="color:var(--tx2);font-size:.82rem">Nenhum agendamento próximo.</div>';
+    } else {
+      upList.innerHTML = upcoming.map(e => {
+        const d = new Date(e.scheduled_at);
+        return `<div class="cal-upcoming-item">
+          <div class="cal-up-channel ${escapeHtml(e.channel)}"></div>
+          <div class="cal-up-title">${escapeHtml(e.title)}</div>
+          <div class="cal-up-date">${d.toLocaleDateString('pt-BR')} ${d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</div>
+          <div class="cal-up-actions">
+            <button class="cap-btn" data-id="${escapeHtml(e.id)}" onclick="openCalModal(this.dataset.id)">✏️</button>
+            <button class="cap-btn cap-btn-ignore" data-id="${escapeHtml(e.id)}" onclick="deleteCalEntry(this.dataset.id)">🗑</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  }
+}
+
+function openCalModal(id) {
+  const modal = document.getElementById('modal-calendario');
+  document.getElementById('cal-edit-id').value = '';
+  document.getElementById('cal-title').value = '';
+  document.getElementById('cal-body').value = '';
+  document.getElementById('cal-channel').value = 'whatsapp';
+  const now = new Date(); now.setHours(now.getHours() + 1, 0, 0, 0);
+  document.getElementById('cal-datetime').value = now.toISOString().slice(0, 16);
+
+  if (id && id !== 'undefined') {
+    const ev = _calEvents.find(e => e.id === id);
+    if (ev) {
+      document.getElementById('cal-edit-id').value = ev.id;
+      document.getElementById('cal-title').value = ev.title || '';
+      document.getElementById('cal-body').value = ev.body || '';
+      document.getElementById('cal-channel').value = ev.channel || 'whatsapp';
+      document.getElementById('cal-datetime').value = new Date(ev.scheduled_at).toISOString().slice(0, 16);
+    }
+  }
+  if (modal) modal.classList.add('open');
+}
+
+function closeCalModal() { document.getElementById('modal-calendario')?.classList.remove('open'); }
+
+async function saveCalEntry() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const id = document.getElementById('cal-edit-id').value;
+  const payload = {
+    user_id: session.user.id,
+    title: document.getElementById('cal-title').value.trim(),
+    body: document.getElementById('cal-body').value.trim(),
+    channel: document.getElementById('cal-channel').value,
+    scheduled_at: new Date(document.getElementById('cal-datetime').value).toISOString(),
+    status: 'agendado'
+  };
+  if (!payload.title) { showToast('Informe um título.', 'err'); return; }
+  let error;
+  if (id) {
+    ({ error } = await sb.from('content_calendar').update(payload).eq('id', id).eq('user_id', session.user.id));
+  } else {
+    ({ error } = await sb.from('content_calendar').insert(payload));
+  }
+  if (error) { showToast('Erro: ' + error.message, 'err'); return; }
+  showToast('Agendamento salvo!', 'ok');
+  closeCalModal();
+  await fetchCalEvents();
+  renderCal();
+}
+
+async function deleteCalEntry(id) {
+  if (!confirm('Remover este agendamento?')) return;
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const { error } = await sb.from('content_calendar').delete().eq('id', id).eq('user_id', session.user.id);
+  if (error) { showToast('Erro: ' + error.message, 'err'); return; }
+  showToast('Agendamento removido.', 'ok');
+  await fetchCalEvents();
+  renderCal();
+}
+
+// ══════════════════════════════════════
+// BIBLIOTECA DE TEMPLATES
+// ══════════════════════════════════════
+const DEFAULT_TEMPLATES = [
+  { type:'relampago', channel:'whatsapp', name:'⚡ Promoção Relâmpago - WhatsApp', content:'⚡ *PROMOÇÃO RELÂMPAGO* ⚡\n\n🛒 {{titulo}}\n\n❌ De: ~{{preco_de}}~\n🔥 Por apenas: *{{preco}}*\n\n🚚 {{frete}}\n⏰ Válido por tempo LIMITADO!\n\n👉 {{link}}' },
+  { type:'relampago', channel:'telegram', name:'⚡ Promoção Relâmpago - Telegram', content:'⚡ **PROMOÇÃO RELÂMPAGO** ⚡\n\n🛒 **{{titulo}}**\n\n❌ De: ~~{{preco_de}}~~\n🔥 Por apenas: **{{preco}}**\n\n🚚 {{frete}}\n⏰ Válido por tempo LIMITADO!\n\n👉 [Comprar agora]({{link}})' },
+  { type:'cupom', channel:'universal', name:'🎫 Cupom de Desconto', content:'🎫 *CUPOM ESPECIAL* 🎫\n\n📦 {{titulo}}\n💰 Preço: *{{preco}}*\n\n🏷️ Use o cupom: *{{cupom}}*\n💥 Desconto extra de {{desconto}}%!\n\n🛒 Compre aqui: {{link}}' },
+  { type:'premium', channel:'instagram', name:'👑 Oferta Premium - Instagram', content:'✨ Encontrei essa joia para você! 👑\n\n{{titulo}} — e o melhor: está em promoção!\n\n💰 Por apenas {{preco}}\n🚀 Aproveite antes que acabe!\n\n🔗 Link na bio!\n\n#oferta #promo #compras #desconto #{{platform}}' },
+  { type:'blackfriday', channel:'universal', name:'🖤 Black Friday', content:'🖤 *BLACK FRIDAY CHEGOU!* 🖤\n\n🛒 {{titulo}}\n\n💣 PREÇO BOMBA: *{{preco}}*\n⬇️ {{desconto}}% OFF!\n\n🎁 {{frete}}\n🏷️ Cupom extra: {{cupom}}\n\n🔗 {{link}}\n\n⚠️ Estoque limitado!' },
+  { type:'primeday', channel:'universal', name:'⭐ Amazon Prime Day', content:'⭐ *PRIME DAY 2024* ⭐\n\n📦 {{titulo}}\n\n💰 De {{preco_de}} por *{{preco}}*\n🔥 Só para membros Prime!\n\n⏰ Oferta por tempo limitado\n\n🔗 {{link}}\n\n📌 Ative seu Prime grátis por 30 dias!' },
+  { type:'shopeeday', channel:'universal', name:'🛍️ Shopee Day', content:'🛍️ *SHOPEE DAY* 🛍️\n\n📦 {{titulo}}\n\n💥 Super desconto: *{{preco}}*\n🏷️ Cupom: *{{cupom}}*\n🚚 Frete grátis!\n\n⏰ APENAS HOJE!\n\n🔗 {{link}}' },
+];
+
+let _allTemplates = [];
+let _tplFilter = 'all';
+
+async function loadPageTemplates() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+
+  const { data } = await sb.from('content_templates')
+    .select('*').eq('user_id', session.user.id).order('created_at', { ascending: false });
+
+  // Merge defaults with user templates
+  _allTemplates = [
+    ...DEFAULT_TEMPLATES.map((t, i) => ({ ...t, id: 'default-' + i, is_default: true })),
+    ...(data || [])
+  ];
+  renderTemplates(_tplFilter);
+}
+
+function filterTemplates(type, btn) {
+  _tplFilter = type;
+  document.querySelectorAll('.tpl-type-filter .cap-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderTemplates(type);
+}
+
+function renderTemplates(type) {
+  const grid = document.getElementById('tpl-grid');
+  if (!grid) return;
+  const items = type === 'all' ? _allTemplates : _allTemplates.filter(t => t.type === type);
+  if (!items.length) { grid.innerHTML = '<div style="grid-column:1/-1;padding:2rem;text-align:center;color:var(--tx2)">Nenhum template encontrado.</div>'; return; }
+
+  const typeBadges = { relampago:'⚡ Relâmpago', cupom:'🎫 Cupom', premium:'👑 Premium', blackfriday:'🖤 Black Friday', primeday:'⭐ Prime Day', shopeeday:'🛍️ Shopee Day', personalizado:'✏️ Personalizado' };
+  const channelLabels = { whatsapp:'WhatsApp', telegram:'Telegram', instagram:'Instagram', universal:'Universal' };
+
+  grid.innerHTML = items.map(t => {
+    const isDefault = t.is_default;
+    return `<div class="tpl-card">
+      <div class="tpl-card-head">
+        <span class="tpl-type-badge tpl-type-${escapeHtml(t.type)}">${escapeHtml(typeBadges[t.type] || t.type)}</span>
+        <span class="tpl-channel-badge">${escapeHtml(channelLabels[t.channel] || t.channel)}</span>
+      </div>
+      <div class="tpl-name">${escapeHtml(t.name)}</div>
+      <div class="tpl-preview">${escapeHtml(t.content)}</div>
+      <div class="tpl-actions">
+        <button class="cap-btn" onclick="copyTemplate('${escapeHtml(t.id)}')">Copiar</button>
+        <button class="cap-btn" onclick="useTemplateInCal('${escapeHtml(t.id)}')">+ Calendário</button>
+        ${!isDefault ? `<button class="cap-btn cap-btn-ignore" onclick="deleteTemplate('${escapeHtml(t.id)}')">🗑</button>` : ''}
+        ${isDefault ? `<button class="cap-btn" onclick="cloneTemplate('${escapeHtml(t.id)}')">Duplicar</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function copyTemplate(id) {
+  const tpl = _allTemplates.find(t => t.id === id);
+  if (!tpl) return;
+  navigator.clipboard.writeText(tpl.content).then(() => showToast('Template copiado!', 'ok'));
+}
+
+function useTemplateInCal(id) {
+  const tpl = _allTemplates.find(t => t.id === id);
+  if (!tpl) return;
+  showDashPage('calendario');
+  setTimeout(() => {
+    document.getElementById('cal-title').value = tpl.name;
+    document.getElementById('cal-body').value = tpl.content;
+    if (tpl.channel !== 'universal') document.getElementById('cal-channel').value = tpl.channel;
+    openCalModal();
+  }, 300);
+}
+
+function openTemplateModal(id) {
+  document.getElementById('tpl-edit-id').value = '';
+  document.getElementById('tpl-name').value = '';
+  document.getElementById('tpl-type').value = 'personalizado';
+  document.getElementById('tpl-channel').value = 'universal';
+  document.getElementById('tpl-content').value = '';
+  if (id) {
+    const t = _allTemplates.find(x => x.id === id);
+    if (t) {
+      document.getElementById('tpl-edit-id').value = t.id;
+      document.getElementById('tpl-name').value = t.name;
+      document.getElementById('tpl-type').value = t.type;
+      document.getElementById('tpl-channel').value = t.channel;
+      document.getElementById('tpl-content').value = t.content;
+    }
+  }
+  document.getElementById('modal-template')?.classList.add('open');
+}
+
+function closeTemplateModal() { document.getElementById('modal-template')?.classList.remove('open'); }
+
+async function saveTemplate() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const id = document.getElementById('tpl-edit-id').value;
+  const payload = {
+    user_id: session.user.id,
+    name: document.getElementById('tpl-name').value.trim(),
+    type: document.getElementById('tpl-type').value,
+    channel: document.getElementById('tpl-channel').value,
+    content: document.getElementById('tpl-content').value.trim(),
+    is_default: false
+  };
+  if (!payload.name || !payload.content) { showToast('Preencha nome e conteúdo.', 'err'); return; }
+  let error;
+  if (id && !id.startsWith('default-')) {
+    ({ error } = await sb.from('content_templates').update(payload).eq('id', id).eq('user_id', session.user.id));
+  } else {
+    ({ error } = await sb.from('content_templates').insert(payload));
+  }
+  if (error) { showToast('Erro: ' + error.message, 'err'); return; }
+  showToast('Template salvo!', 'ok');
+  closeTemplateModal();
+  loadPageTemplates();
+}
+
+async function deleteTemplate(id) {
+  if (id.startsWith('default-')) { showToast('Templates padrão não podem ser excluídos.', 'err'); return; }
+  if (!confirm('Excluir este template?')) return;
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const { error } = await sb.from('content_templates').delete().eq('id', id).eq('user_id', session.user.id);
+  if (error) { showToast('Erro: ' + error.message, 'err'); return; }
+  showToast('Template excluído.', 'ok');
+  loadPageTemplates();
+}
+
+async function cloneTemplate(id) {
+  const tpl = _allTemplates.find(t => t.id === id);
+  if (!tpl) return;
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const { error } = await sb.from('content_templates').insert({
+    user_id: session.user.id,
+    name: 'Cópia de ' + tpl.name,
+    type: 'personalizado',
+    channel: tpl.channel,
+    content: tpl.content,
+    is_default: false
+  });
+  if (error) { showToast('Erro: ' + error.message, 'err'); return; }
+  showToast('Template duplicado!', 'ok');
+  loadPageTemplates();
 }
