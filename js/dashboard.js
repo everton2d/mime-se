@@ -231,7 +231,7 @@ function renderRecentLinks(links) {
   const tbody = document.getElementById('recent-links-tbody');
   if (!tbody) return;
   if (!links.length) {
-    tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><span class="empty-icon">🔗</span><div class="empty-title">Nenhum link ainda</div><div class="empty-desc">Cole um link acima para começar.</div></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><span class="empty-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span><div class="empty-title">Nenhum link ainda</div><div class="empty-desc">Cole um link acima para começar.</div></div></td></tr>`;
     return;
   }
   tbody.innerHTML = links.map(l => {
@@ -277,7 +277,7 @@ async function gerarLink() {
     loadPainel();
   } finally {
     // FIX 4: garante que botão sempre volta ao estado normal
-    btn.disabled = false; btn.textContent = '⚡ Gerar Link';
+    btn.disabled = false; btn.textContent = 'Gerar Link';
   }
 }
 
@@ -313,7 +313,7 @@ function renderLinksTable(links) {
   const tbody = document.getElementById('links-page-tbody');
   if (!tbody) return;
   if (!links.length) {
-    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><span class="empty-icon">🔗</span><div class="empty-title">Nenhum link encontrado</div><div class="empty-desc">Gere seu primeiro link no painel.</div></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><span class="empty-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span><div class="empty-title">Nenhum link encontrado</div><div class="empty-desc">Gere seu primeiro link no painel.</div></div></td></tr>`;
     return;
   }
   // FIX 2+3: escapa HTML e usa data-url para evitar XSS no copyLink
@@ -361,7 +361,7 @@ function renderGrupos(grupos) {
   const el = document.getElementById('grupos-container');
   if (!el) return;
   if (!grupos.length) {
-    el.innerHTML = `<div class="empty-state"><span class="empty-icon">💬</span><div class="empty-title">Nenhum grupo adicionado</div><div class="empty-desc">Conecte seus grupos de WhatsApp para disparar ofertas automaticamente.</div></div>`;
+    el.innerHTML = `<div class="empty-state"><span class="empty-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><div class="empty-title">Nenhum grupo adicionado</div><div class="empty-desc">Conecte seus grupos de WhatsApp para disparar ofertas automaticamente.</div></div>`;
     return;
   }
   // FIX 2: escapa nomes dos grupos
@@ -370,7 +370,7 @@ function renderGrupos(grupos) {
       <div class="grupo-name">${escapeHtml(g.nome)}</div>
       <div class="grupo-nicho">${escapeHtml(g.nicho) || 'Sem nicho definido'}</div>
       <div class="grupo-meta">
-        <span class="grupo-members">👥 ${parseInt(g.membros) || 0} membros</span>
+        <span class="grupo-members">${parseInt(g.membros) || 0} membros</span>
         <span class="status-dot ${g.ativo ? '' : 'inactive'}">${g.ativo ? 'Ativo' : 'Inativo'}</span>
       </div>
     </div>`).join('')}</div>`;
@@ -400,7 +400,7 @@ async function loadPageLeads() {
   const tbody = document.getElementById('leads-tbody');
   if (!tbody) return;
   if (!leads?.length) {
-    tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><span class="empty-icon">👥</span><div class="empty-title">Nenhum lead ainda</div><div class="empty-desc">Os leads aparecem aqui quando membros entrarem nos seus grupos monitorados.</div></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><span class="empty-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><div class="empty-title">Nenhum lead ainda</div><div class="empty-desc">Os leads aparecem aqui quando membros entrarem nos seus grupos monitorados.</div></div></td></tr>`;
     return;
   }
   // FIX 2: escapa dados de leads

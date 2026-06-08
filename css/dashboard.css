@@ -201,7 +201,7 @@
 
 /* ══ EMPTY STATE ══ */
 .empty-state{text-align:center;padding:3.5rem 2rem}
-.empty-icon{font-size:2.5rem;margin-bottom:.85rem;display:block;opacity:.65}
+.empty-icon{width:48px;height:48px;margin:.5rem auto .85rem;display:flex;align-items:center;justify-content:center;border-radius:14px;background:var(--glow);color:var(--coral)}
 .empty-title{font-size:.95rem;font-weight:700;color:var(--tx2);margin-bottom:.45rem;transition:color .35s}
 .empty-desc{font-size:.82rem;color:var(--tx3);line-height:1.65;max-width:340px;margin:0 auto 1.5rem;transition:color .35s}
 
@@ -510,7 +510,7 @@
 
 .loja-icon{
   width:44px;height:44px;border-radius:10px;display:flex;
-  align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0
+  align-items:center;justify-content:center;flex-shrink:0
 }
 
 .loja-name{font-size:1rem;font-weight:800;color:var(--tx);letter-spacing:-.01em;transition:color .35s}
