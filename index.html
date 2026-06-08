@@ -467,6 +467,8 @@
           <li><div class="dash-nav-item" data-page="stories"><span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>Template Stories</div></li>
           <li><div class="dash-nav-item" data-page="disparo"><span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>Texto de Disparo</div></li>
           <li><div class="dash-nav-item" data-page="instagram"><span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span>Instagram</div></li>
+          <li><div class="dash-nav-item" data-page="automacoes"><span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>Automações</div></li>
+          <li><div class="dash-nav-item" data-page="capturas"><span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>Promoções</div></li>
         </ul>
       </div>
 
@@ -992,6 +994,125 @@
           <div class="insta-card"><span class="badge-soon">Em breve</span><div class="insta-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="insta-card-title">Agendamento de Posts</div><div class="insta-card-desc">Agende posts para feed, stories, reels e carrossel. Programe a semana inteira de uma vez e mantenha seu perfil sempre ativo.</div></div>
           <div class="insta-card"><span class="badge-soon">Em breve</span><div class="insta-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></div><div class="insta-card-title">Stories Automáticos</div><div class="insta-card-desc">Gere stories profissionais com imagem do produto, preço e CTA. Com a cara da sua marca, sem abrir o Canva.</div></div>
           <div class="insta-card"><span class="badge-soon">Em breve</span><div class="insta-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div class="insta-card-title">Reels e Carrossel</div><div class="insta-card-desc">Templates de Reels e carrossel otimizados para afiliados. Formatos que performam melhor para produto, promoção e depoimento.</div></div>
+        </div>
+      </div>
+
+      <!-- ═══ AUTOMAÇÕES ═══ -->
+      <div class="dash-page" id="dp-automacoes">
+        <div class="dp-header">
+          <div><div class="dp-title">Automações</div><div class="dp-sub">Ative ou desative cada módulo do motor de automação</div></div>
+        </div>
+        <div class="auto-grid" id="auto-grid">
+          <div class="auto-card" id="auto-captura-telegram">
+            <div class="auto-card-head">
+              <div class="auto-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+              <div class="auto-toggle-wrap">
+                <label class="auto-toggle"><input type="checkbox" id="tog-captura-telegram" onchange="saveAutomation('captura_telegram', this.checked)"><span class="auto-slider"></span></label>
+              </div>
+            </div>
+            <div class="auto-card-title">Captura Telegram</div>
+            <div class="auto-card-desc">Monitora canais configurados e captura automaticamente promoções, links e preços.</div>
+          </div>
+          <div class="auto-card" id="auto-reescrita-ia">
+            <div class="auto-card-head">
+              <div class="auto-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+              <div class="auto-toggle-wrap">
+                <label class="auto-toggle"><input type="checkbox" id="tog-reescrita-ia" onchange="saveAutomation('reescrita_ia', this.checked)"><span class="auto-slider"></span></label>
+              </div>
+            </div>
+            <div class="auto-card-title">Reescrita com IA</div>
+            <div class="auto-card-desc">Após captura, a IA gera título, texto de Telegram, WhatsApp, CTA e hashtags automaticamente.</div>
+          </div>
+          <div class="auto-card" id="auto-pub-telegram">
+            <div class="auto-card-head">
+              <div class="auto-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+              <div class="auto-toggle-wrap">
+                <label class="auto-toggle"><input type="checkbox" id="tog-pub-telegram" onchange="saveAutomation('publicacao_telegram', this.checked)"><span class="auto-slider"></span></label>
+              </div>
+            </div>
+            <div class="auto-card-title">Publicação Telegram</div>
+            <div class="auto-card-desc">Publica promoções aprovadas automaticamente no canal Telegram configurado.</div>
+          </div>
+          <div class="auto-card" id="auto-pub-whatsapp">
+            <div class="auto-card-head">
+              <div class="auto-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+              <div class="auto-toggle-wrap">
+                <label class="auto-toggle"><input type="checkbox" id="tog-pub-whatsapp" onchange="saveAutomation('publicacao_whatsapp', this.checked)"><span class="auto-slider"></span></label>
+              </div>
+            </div>
+            <div class="auto-card-title">Publicação WhatsApp</div>
+            <div class="auto-card-desc">Envia promoções aprovadas para grupos e listas de transmissão no WhatsApp via Evolution API.</div>
+          </div>
+          <div class="auto-card" id="auto-stories">
+            <div class="auto-card-head">
+              <div class="auto-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg></div>
+              <div class="auto-toggle-wrap">
+                <label class="auto-toggle"><input type="checkbox" id="tog-stories" onchange="saveAutomation('geracao_stories', this.checked)"><span class="auto-slider"></span></label>
+              </div>
+            </div>
+            <div class="auto-card-title">Geração de Stories</div>
+            <div class="auto-card-desc">Cria automaticamente stories otimizados para Instagram e WhatsApp com imagem do produto.</div>
+          </div>
+          <div class="auto-card" id="auto-legendas">
+            <div class="auto-card-head">
+              <div class="auto-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+              <div class="auto-toggle-wrap">
+                <label class="auto-toggle"><input type="checkbox" id="tog-legendas" onchange="saveAutomation('geracao_legendas', this.checked)"><span class="auto-slider"></span></label>
+              </div>
+            </div>
+            <div class="auto-card-title">Geração de Legendas</div>
+            <div class="auto-card-desc">Gera legendas completas para posts no Instagram com hashtags e emojis otimizados.</div>
+          </div>
+        </div>
+        <div class="auto-info-box">
+          <div class="auto-info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <div>As automações são processadas pelo motor n8n. <strong>Captura Telegram</strong> e <strong>Reescrita com IA</strong> devem ser ativadas para o fluxo completo funcionar.</div>
+        </div>
+      </div>
+
+      <!-- ═══ PROMOÇÕES CAPTURADAS ═══ -->
+      <div class="dash-page" id="dp-capturas">
+        <div class="dp-header">
+          <div><div class="dp-title">Promoções Capturadas</div><div class="dp-sub">Revise, edite e publique as promoções capturadas pelo motor de automação</div></div>
+          <div class="dp-header-actions">
+            <button class="btn-outline-sm" onclick="loadPageCapturas()">↻ Atualizar</button>
+          </div>
+        </div>
+
+        <div class="cap-tabs">
+          <button class="cap-tab active" data-status="nova" onclick="filterCapturas('nova', this)">Novas</button>
+          <button class="cap-tab" data-status="revisada" onclick="filterCapturas('revisada', this)">Revisadas</button>
+          <button class="cap-tab" data-status="aprovada" onclick="filterCapturas('aprovada', this)">Aprovadas</button>
+          <button class="cap-tab" data-status="publicada" onclick="filterCapturas('publicada', this)">Publicadas</button>
+          <button class="cap-tab" data-status="ignorada" onclick="filterCapturas('ignorada', this)">Ignoradas</button>
+          <button class="cap-tab" data-status="all" onclick="filterCapturas('all', this)">Todas</button>
+        </div>
+
+        <div id="capturas-list" class="capturas-list">
+          <div class="empty-state"><div class="empty-icon">📭</div><div class="empty-txt">Nenhuma promoção capturada ainda.<br>Ative a automação de Captura Telegram para começar.</div></div>
+        </div>
+      </div>
+
+      <!-- MODAL EDITAR OFERTA -->
+      <div class="modal-overlay" id="modal-oferta" onclick="if(event.target===this)closeOfertaModal()">
+        <div class="modal-box">
+          <div class="modal-head">
+            <div class="modal-title">Editar Promoção</div>
+            <button class="modal-close" onclick="closeOfertaModal()">✕</button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="edit-offer-id">
+            <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="edit-titulo" type="text" placeholder="Título da promoção"></div>
+            <div class="form-group"><label class="form-label">Texto Telegram</label><textarea class="form-input" id="edit-texto-telegram" rows="4" placeholder="Texto para publicar no Telegram..."></textarea></div>
+            <div class="form-group"><label class="form-label">Texto WhatsApp</label><textarea class="form-input" id="edit-texto-whatsapp" rows="3" placeholder="Texto para publicar no WhatsApp..."></textarea></div>
+            <div class="form-group"><label class="form-label">CTA</label><input class="form-input" id="edit-cta" type="text" placeholder="Ex: Compre agora e economize!"></div>
+            <div class="form-group"><label class="form-label">Hashtags</label><input class="form-input" id="edit-hashtags" type="text" placeholder="#promo #oferta #amazon"></div>
+            <div class="form-group"><label class="form-label">URL Original</label><input class="form-input" id="edit-url" type="url" placeholder="https://..."></div>
+          </div>
+          <div class="modal-foot">
+            <button class="btn-outline-sm" onclick="closeOfertaModal()">Cancelar</button>
+            <button class="btn-primary-sm" onclick="saveOfertaEdit()">Salvar e Aprovar</button>
+          </div>
         </div>
       </div>
 

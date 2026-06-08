@@ -43,7 +43,8 @@ function showDashPage(name) {
   const loaders = {
     painel: loadPainel, links: loadPageLinks, grupos: loadPageGrupos,
     leads: loadPageLeads, config: loadPageConfig, lojas: loadPageLojas,
-    stories: loadPageStories, disparo: loadPageDisparo
+    stories: loadPageStories, disparo: loadPageDisparo,
+    automacoes: loadPageAutomacoes, capturas: loadPageCapturas
   };
   loaders[name]?.();
 }
@@ -774,4 +775,184 @@ async function saveTextoDisparo() {
   );
   if (error) { showToast('Erro: ' + error.message, 'err'); return; }
   showToast('Modelo de disparo salvo! ✅', 'ok');
+}
+
+// ══════════════════════════════════════
+// AUTOMAÇÕES
+// ══════════════════════════════════════
+async function loadPageAutomacoes() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const { data } = await sb.from('automation_configs')
+    .select('key,value')
+    .eq('user_id', session.user.id);
+  const map = {};
+  (data || []).forEach(r => { map[r.key] = r.value; });
+  const keys = ['captura_telegram','reescrita_ia','publicacao_telegram','publicacao_whatsapp','geracao_stories','geracao_legendas'];
+  const toggleIds = {
+    captura_telegram: 'tog-captura-telegram',
+    reescrita_ia: 'tog-reescrita-ia',
+    publicacao_telegram: 'tog-pub-telegram',
+    publicacao_whatsapp: 'tog-pub-whatsapp',
+    geracao_stories: 'tog-stories',
+    geracao_legendas: 'tog-legendas'
+  };
+  keys.forEach(k => {
+    const el = document.getElementById(toggleIds[k]);
+    if (el) el.checked = !!(map[k]?.ativo);
+  });
+}
+
+async function saveAutomation(key, enabled) {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const { error } = await sb.from('automation_configs').upsert(
+    { user_id: session.user.id, key, value: { ativo: enabled } },
+    { onConflict: 'user_id,key' }
+  );
+  if (error) { showToast('Erro ao salvar: ' + error.message, 'err'); return; }
+  showToast(enabled ? 'Automação ativada!' : 'Automação desativada.', enabled ? 'ok' : 'err');
+}
+
+// ══════════════════════════════════════
+// PROMOÇÕES CAPTURADAS
+// ══════════════════════════════════════
+let _allCapturas = [];
+let _currentCapFilter = 'nova';
+
+async function loadPageCapturas() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const el = document.getElementById('capturas-list');
+  if (el) el.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--tx2)">Carregando...</div>';
+  const { data, error } = await sb.from('captured_offers')
+    .select('*')
+    .eq('user_id', session.user.id)
+    .order('created_at', { ascending: false })
+    .limit(200);
+  if (error) { if (el) el.innerHTML = '<div style="padding:2rem;text-align:center;color:#ef4444">Erro: ' + escapeHtml(error.message) + '</div>'; return; }
+  _allCapturas = data || [];
+  renderCapturas(_currentCapFilter);
+}
+
+function filterCapturas(status, btn) {
+  _currentCapFilter = status;
+  document.querySelectorAll('.cap-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderCapturas(status);
+}
+
+function renderCapturas(status) {
+  const el = document.getElementById('capturas-list');
+  if (!el) return;
+  const items = status === 'all' ? _allCapturas : _allCapturas.filter(o => o.status === status);
+  if (!items.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-txt">Nenhuma promoção ' + escapeHtml(status === 'all' ? '' : 'com status "' + status + '"') + '.<br>Ative a automação de Captura Telegram para começar.</div></div>';
+    return;
+  }
+  el.innerHTML = items.map(o => {
+    const id = escapeHtml(o.id);
+    const title = escapeHtml(o.titulo || o.original_text?.slice(0, 80) || 'Sem título');
+    const text = escapeHtml(o.texto_telegram || o.original_text || '');
+    const plat = escapeHtml(o.platform || 'N/A');
+    const statusLabel = { nova: 'Nova', revisada: 'Revisada', aprovada: 'Aprovada', publicada: 'Publicada', ignorada: 'Ignorada' }[o.status] || o.status;
+    const date = o.created_at ? new Date(o.created_at).toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '';
+    return `<div class="cap-card">
+      <div class="cap-card-head">
+        <div class="cap-card-meta">
+          <span class="cap-status-badge cap-status-${escapeHtml(o.status)}">${escapeHtml(statusLabel)}</span>
+          <span class="cap-platform">${plat}</span>
+          <span class="cap-date">${date}</span>
+        </div>
+      </div>
+      <div class="cap-title">${title}</div>
+      <div class="cap-text">${text}</div>
+      <div class="cap-actions">
+        ${o.status !== 'aprovada' && o.status !== 'publicada' ? `<button class="cap-btn cap-btn-approve" data-id="${id}" onclick="approveCaptura(this.dataset.id)">✓ Aprovar</button>` : ''}
+        <button class="cap-btn" data-id="${id}" onclick="openOfertaModal(this.dataset.id)">✏️ Editar</button>
+        ${o.status === 'aprovada' ? `<button class="cap-btn cap-btn-publish" data-id="${id}" onclick="publishCaptura(this.dataset.id)">🚀 Publicar</button>` : ''}
+        <button class="cap-btn cap-btn-ignore" data-id="${id}" onclick="ignoreCaptura(this.dataset.id)">Ignorar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function approveCaptura(id) {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const { error } = await sb.from('captured_offers').update({ status: 'aprovada' }).eq('id', id).eq('user_id', session.user.id);
+  if (error) { showToast('Erro: ' + error.message, 'err'); return; }
+  showToast('Promoção aprovada!', 'ok');
+  loadPageCapturas();
+}
+
+async function ignoreCaptura(id) {
+  if (!confirm('Ignorar esta promoção?')) return;
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const { error } = await sb.from('captured_offers').update({ status: 'ignorada' }).eq('id', id).eq('user_id', session.user.id);
+  if (error) { showToast('Erro: ' + error.message, 'err'); return; }
+  showToast('Promoção ignorada.', 'ok');
+  loadPageCapturas();
+}
+
+async function publishCaptura(id) {
+  const offer = _allCapturas.find(o => o.id === id);
+  if (!offer) return;
+  showToast('Publicando...', 'ok');
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+    const { data: cfgData } = await sb.from('automation_configs').select('key,value').eq('user_id', session.user.id);
+    const cfgMap = {};
+    (cfgData || []).forEach(r => { cfgMap[r.key] = r.value; });
+    if (cfgMap.publicacao_telegram?.ativo && cfgMap.publicacao_telegram?.webhook_url) {
+      await fetch(cfgMap.publicacao_telegram.webhook_url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ offer_id: id, chat_id: cfgMap.publicacao_telegram?.chat_id || '' })
+      });
+    }
+    showToast('Publicação disparada!', 'ok');
+  } catch(e) {
+    showToast('Erro ao publicar: ' + e.message, 'err');
+  }
+}
+
+function openOfertaModal(id) {
+  const offer = _allCapturas.find(o => o.id === id);
+  if (!offer) return;
+  document.getElementById('edit-offer-id').value = offer.id;
+  document.getElementById('edit-titulo').value = offer.titulo || '';
+  document.getElementById('edit-texto-telegram').value = offer.texto_telegram || '';
+  document.getElementById('edit-texto-whatsapp').value = offer.texto_whatsapp || '';
+  document.getElementById('edit-cta').value = offer.cta || '';
+  document.getElementById('edit-hashtags').value = offer.hashtags || '';
+  document.getElementById('edit-url').value = offer.original_url || '';
+  document.getElementById('modal-oferta').classList.add('open');
+}
+
+function closeOfertaModal() {
+  document.getElementById('modal-oferta').classList.remove('open');
+}
+
+async function saveOfertaEdit() {
+  const id = document.getElementById('edit-offer-id').value;
+  if (!id) return;
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const payload = {
+    titulo: document.getElementById('edit-titulo').value,
+    texto_telegram: document.getElementById('edit-texto-telegram').value,
+    texto_whatsapp: document.getElementById('edit-texto-whatsapp').value,
+    cta: document.getElementById('edit-cta').value,
+    hashtags: document.getElementById('edit-hashtags').value,
+    original_url: document.getElementById('edit-url').value,
+    status: 'aprovada'
+  };
+  const { error } = await sb.from('captured_offers').update(payload).eq('id', id).eq('user_id', session.user.id);
+  if (error) { showToast('Erro: ' + error.message, 'err'); return; }
+  showToast('Promoção salva e aprovada!', 'ok');
+  closeOfertaModal();
+  loadPageCapturas();
 }
